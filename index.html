@@ -801,83 +801,83 @@
         }
 
         function renderSizeDashboard() {
-            const sizeTbody = document.getElementById('sizeDashboardTable');
-            sizeTbody.innerHTML = '';
+    const sizeTbody = document.getElementById('sizeDashboardTable');
+    sizeTbody.innerHTML = '';
 
-            const sizeMap = {};
-            punchInventory.forEach(item => {
-                const sz = getProp(item, 'size') || 'Unspecified';
-                const surf = getProp(item, 'surfaceType') || 'Polos';
-                const vendor = getProp(item, 'vendor');
-                const key = `${sz}_${surf}`;
+    const sizeMap = {};
+    punchInventory.forEach(item => {
+        const sz = getProp(item, 'size') || 'Unspecified';
+        const surf = getProp(item, 'surfaceType') || 'Polos';
+        const vendor = getProp(item, 'vendor') || 'Tanpa Vendor';
+        
+        // Key unik berdasarkan Ukuran, Permukaan, dan Supplier
+        const key = `${sz}_${surf}_${vendor}`;
 
-                if (!sizeMap[key]) {
-                    sizeMap[key] = { 
-                        size: sz, 
-                        surface: surf, 
-                        vendors: new Set(),
-                        total: 0, ready: 0, terpakai: 0, repair: 0, rusak: 0, alertCount: 0 
-                    };
-                }
-                
-                if (vendor) sizeMap[key].vendors.add(vendor);
-
-                const itemReady = Number(getProp(item, 'ready')) || 0;
-                const itemTerpakai = Number(getProp(item, 'terpakai')) || 0;
-                const itemRepair = Number(getProp(item, 'repair')) || 0;
-                const itemRusak = Number(getProp(item, 'rusak')) || 0;
-                const itemMinStock = Number(getProp(item, 'minStock')) || 0;
-
-                const totalUnit = itemReady + itemTerpakai + itemRepair + itemRusak;
-                sizeMap[key].total += totalUnit;
-                sizeMap[key].ready += itemReady;
-                sizeMap[key].terpakai += itemTerpakai;
-                sizeMap[key].repair += itemRepair;
-                sizeMap[key].rusak += itemRusak;
-                if (itemReady < itemMinStock) {
-                    sizeMap[key].alertCount += 1;
-                }
-            });
-
-            Object.values(sizeMap).forEach(s => {
-                const tr = document.createElement('tr');
-                tr.style.cursor = 'pointer';
-                tr.onclick = () => {
-                    document.getElementById('searchInput').value = s.size;
-                    document.getElementById('filterSurface').value = s.surface;
-                    document.getElementById('filterCondition').value = 'ALL';
-                    document.getElementById('filterAlert').value = 'ALL'; 
-                    renderTable();
-                };
-
-                let surfaceBadge = s.surface === 'Motif' 
-                    ? `<span class="badge bg-primary-subtle text-primary border border-primary-subtle"><i class="fa-solid fa-layer-group me-1"></i> Motif</span>`
-                    : `<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Polos</span>`;
-
-                const vendorArray = Array.from(s.vendors);
-                let vendorBadges = vendorArray.length > 0 
-                    ? vendorArray.map(v => `<span class="badge bg-light text-dark border me-1 mb-1">${v}</span>`).join('')
-                    : `-`;
-
-                tr.innerHTML = `
-                    <td class="px-3 py-2 fw-bold text-nowrap">${s.size} cm</td>
-                    <td class="px-3 py-2 text-nowrap">${surfaceBadge}</td>
-                    <td class="px-3 py-2 text-nowrap">${vendorBadges}</td>
-                    <td class="px-3 py-2 text-center fw-bold text-nowrap">${s.total}</td>
-                    <td class="px-3 py-2 text-center fw-bold text-success text-nowrap">${s.ready}</td>
-                    <td class="px-3 py-2 text-center fw-bold text-primary text-nowrap">${s.terpakai}</td>
-                    <td class="px-3 py-2 text-center fw-bold text-warning-emphasis text-nowrap">${s.repair}</td>
-                    <td class="px-3 py-2 text-center fw-bold text-danger text-nowrap">${s.rusak}</td>
-                    <td class="px-3 py-2 text-center text-nowrap">
-                        ${s.alertCount > 0 
-                            ? `<span class="badge bg-danger text-white rounded-pill"><i class="fa-solid fa-triangle-exclamation me-1"></i> ${s.alertCount} Restock</span>` 
-                            : `<span class="badge bg-success text-white rounded-pill"><i class="fa-solid fa-check me-1"></i> Aman</span>`
-                        }
-                    </td>
-                `;
-                sizeTbody.appendChild(tr);
-            });
+        if (!sizeMap[key]) {
+            sizeMap[key] = { 
+                size: sz, 
+                surface: surf, 
+                vendor: vendor,
+                total: 0, ready: 0, terpakai: 0, repair: 0, rusak: 0, alertCount: 0 
+            };
         }
+
+        const itemReady = Number(getProp(item, 'ready')) || 0;
+        const itemTerpakai = Number(getProp(item, 'terpakai')) || 0;
+        const itemRepair = Number(getProp(item, 'repair')) || 0;
+        const itemRusak = Number(getProp(item, 'rusak')) || 0;
+        const itemMinStock = Number(getProp(item, 'minStock')) || 0;
+
+        const totalUnit = itemReady + itemTerpakai + itemRepair + itemRusak;
+        sizeMap[key].total += totalUnit;
+        sizeMap[key].ready += itemReady;
+        sizeMap[key].terpakai += itemTerpakai;
+        sizeMap[key].repair += itemRepair;
+        sizeMap[key].rusak += itemRusak;
+        
+        if (itemReady < itemMinStock) {
+            sizeMap[key].alertCount += 1;
+        }
+    });
+
+    Object.values(sizeMap).forEach(s => {
+        const tr = document.createElement('tr');
+        tr.style.cursor = 'pointer';
+        
+        // Klik baris otomatis memfilter Ukuran, Permukaan, dan kata kunci Supplier
+        tr.onclick = () => {
+            document.getElementById('searchInput').value = s.vendor === 'Tanpa Vendor' ? s.size : `${s.size} ${s.vendor}`;
+            document.getElementById('filterSurface').value = s.surface;
+            document.getElementById('filterCondition').value = 'ALL';
+            document.getElementById('filterAlert').value = 'ALL'; 
+            renderTable();
+        };
+
+        let surfaceBadge = s.surface === 'Motif' 
+            ? `<span class="badge bg-primary-subtle text-primary border border-primary-subtle"><i class="fa-solid fa-layer-group me-1"></i> Motif</span>`
+            : `<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Polos</span>`;
+
+        let vendorBadge = `<span class="badge bg-light text-dark border fw-bold px-2 py-1">${s.vendor}</span>`;
+
+        tr.innerHTML = `
+            <td class="px-3 py-2 fw-bold text-nowrap">${s.size} cm</td>
+            <td class="px-3 py-2 text-nowrap">${surfaceBadge}</td>
+            <td class="px-3 py-2 text-nowrap">${vendorBadge}</td>
+            <td class="px-3 py-2 text-center fw-bold text-nowrap">${s.total}</td>
+            <td class="px-3 py-2 text-center fw-bold text-success text-nowrap">${s.ready}</td>
+            <td class="px-3 py-2 text-center fw-bold text-primary text-nowrap">${s.terpakai}</td>
+            <td class="px-3 py-2 text-center fw-bold text-warning-emphasis text-nowrap">${s.repair}</td>
+            <td class="px-3 py-2 text-center fw-bold text-danger text-nowrap">${s.rusak}</td>
+            <td class="px-3 py-2 text-center text-nowrap">
+                ${s.alertCount > 0 
+                    ? `<span class="badge bg-danger text-white rounded-pill"><i class="fa-solid fa-triangle-exclamation me-1"></i> ${s.alertCount} Restock</span>` 
+                    : `<span class="badge bg-success text-white rounded-pill"><i class="fa-solid fa-check me-1"></i> Aman</span>`
+                }
+            </td>
+        `;
+        sizeTbody.appendChild(tr);
+    });
+}
 
         function renderTable() {
             renderSizeDashboard();
