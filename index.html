@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Control Stok Punch Keramik (Google Sheets Connected)</title>
+    <title>Monitoring Stok Punch Keramik</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -115,14 +115,12 @@
             font-weight: 700;
         }
 
-        /* Responsive Table Fixes */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
 
-        /* Ensure Minimum Width for Auto-sizing Columns so Data Never Overlaps or Squishes */
         .table-custom-main {
             min-width: 1280px;
             table-layout: auto;
@@ -212,7 +210,7 @@
                     <i class="fa-solid fa-layer-group fs-4"></i>
                 </div>
                 <div>
-                    <h1 class="h5 mb-0 fw-extrabold text-white tracking-tight">PUNCH CONTROL SYSTEM</h1>
+                    <h1 class="h5 mb-0 fw-extrabold text-white tracking-tight">MONITORING PUNCH</h1>
                     <small class="text-slate-400 opacity-75">Cloud Connected: Google Sheets Realtime API</small>
                 </div>
             </div>
@@ -221,7 +219,7 @@
                     <i class="fa-solid fa-rotate me-1"></i> Sync Data
                 </button>
                 <button onclick="openModal('add')" class="btn btn-warning fw-bold px-3 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2 btn-sm">
-                    <i class="fa-solid fa-plus-circle"></i> Tambah Matras Punch
+                    <i class="fa-solid fa-plus-circle"></i> Tambah Punch
                 </button>
             </div>
         </div>
@@ -242,7 +240,7 @@
                         <i class="fa-solid fa-triangle-exclamation fs-5"></i>
                     </div>
                     <div>
-                        <h6 class="fw-bold mb-0 text-danger">Peringatan Kritis Stok Matras Punch!</h6>
+                        <h6 class="fw-bold mb-0 text-danger">Peringatan Kritis Stok Punch!</h6>
                         <small id="alertBannerText" class="text-danger-emphasis d-block mt-0.5"></small>
                     </div>
                 </div>
@@ -396,7 +394,7 @@
                     <table class="table table-hover align-middle mb-0 table-modern table-custom-main" style="font-size: 0.825rem;">
                         <thead>
                             <tr>
-                                <th class="py-2.5 px-3">Kode Matras Punch</th>
+                                <th class="py-2.5 px-3">Kode Punch</th>
                                 <th class="py-2.5 px-3">Vendor / Supplier</th>
                                 <th class="py-2.5 px-3">Posisi</th>
                                 <th class="py-2.5 px-3">Finishing</th>
@@ -438,15 +436,15 @@
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-uppercase text-secondary small">Kode Punch *</label>
-                                <input type="text" id="formCode" required class="form-control" placeholder="P6060-U01">
+                                <input type="text" id="formCode" required class="form-control" placeholder="Tulis Kode SAP Disini">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-uppercase text-secondary small">No. Seri *</label>
-                                <input type="text" id="formSerialNo" required class="form-control" placeholder="SN-PU-6001">
+                                <input type="text" id="formSerialNo" required class="form-control" placeholder="Tulis Jika Ada">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-uppercase text-primary small">Vendor / Supplier *</label>
-                                <input type="text" id="formVendor" required class="form-control bg-primary-subtle border-primary-subtle" placeholder="LB Ceramic / SACMI">
+                                <input type="text" id="formVendor" required class="form-control bg-primary-subtle border-primary-subtle" placeholder="OB/MDI/SAP/ITA">
                             </div>
                         </div>
 
@@ -463,7 +461,9 @@
                                 <select id="formCavity" required class="form-select">
                                     <option value="1 Cavity">1 Cavity</option>
                                     <option value="2 Cavity">2 Cavity</option>
+                                    <option value="3 Cavity">3 Cavity</option>
                                     <option value="4 Cavity">4 Cavity</option>
+                                    <option value="5 Cavity">5 Cavity</option>
                                     <option value="6 Cavity">6 Cavity</option>
                                 </select>
                             </div>
@@ -489,8 +489,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Lini Mesin Press *</label>
-                                <input type="text" id="formLine" required class="form-control" placeholder="SACMI Line 1">
+                                <label class="form-label fw-bold text-uppercase text-secondary small">Mesin Press *</label>
+                                <input type="text" id="formLine" required class="form-control" placeholder="Misal Sacmi / DLT">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label fw-bold text-uppercase text-secondary small">Lokasi Rak *</label>
@@ -683,8 +683,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // PASTE URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA DI SINI
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbx_GANTI_DENGAN_URL_DEPLOYMENT_ANDA/exec";
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwb0f3-feXFqQ0nkjwO6qKHQXXqQke5WikM5s4uiNSxqd1-WhKkEGGaYseOpWyYeq1w/exec";
 
         let punchInventory = [];
         let punchModalBS = null;
@@ -698,7 +697,6 @@
             historyModalBS = new bootstrap.Modal(document.getElementById('historyModal'));
             qrModalBS = new bootstrap.Modal(document.getElementById('qrModal'));
 
-            // Proteksi Shortcut Inspect Element
             document.addEventListener('keydown', (e) => {
                 if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
                     e.preventDefault();
@@ -708,7 +706,6 @@
             fetchFromGoogleSheets();
         });
 
-        // Helper untuk menangani kecocokan nama properti dari JSON Google Sheets (misal: "code" vs "Code")
         function getProp(obj, prop) {
             if (!obj) return '';
             if (obj[prop] !== undefined) return obj[prop];
@@ -1228,13 +1225,31 @@
         function handleFormSubmit(event) {
             event.preventDefault();
             
-            const id = document.getElementById('punchId').value || Date.now();
+            const existingId = document.getElementById('punchId').value;
+            const id = existingId || Date.now();
             const now = new Date();
             const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
             const surfaceCategoryEl = document.querySelector('input[name="surfaceCategory"]:checked');
             const surfaceType = surfaceCategoryEl ? surfaceCategoryEl.value : 'Polos';
             const motifName = (surfaceType === 'Motif') ? document.getElementById('formMotifName').value : '-';
+
+            // Ambil history lama agar riwayat mutasi tidak hilang saat edit
+            let existingHistory = [];
+            if (existingId) {
+                const currentItem = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == existingId);
+                if (currentItem && currentItem.history) {
+                    existingHistory = currentItem.history;
+                }
+            }
+
+            const newLog = { 
+                time: timeStr, 
+                action: existingId ? 'Update Master Data' : 'Inisialisasi Master Data', 
+                qty: 1, 
+                line: `${document.getElementById('formLine').value} / ${document.getElementById('formRackLocation').value}`, 
+                notes: 'Data diperbarui via form master' 
+            };
 
             const payload = {
                 id: id,
@@ -1257,7 +1272,7 @@
                 repair: Number(document.getElementById('formRepair').value),
                 rusak: Number(document.getElementById('formRusak').value),
                 minStock: Number(document.getElementById('formMinStock').value),
-                history: [{ time: timeStr, action: 'Inisialisasi / Update Master', qty: 1, line: `${document.getElementById('formLine').value} / ${document.getElementById('formRackLocation').value}`, notes: 'Data diperbarui via dashboard' }]
+                history: [newLog, ...existingHistory]
             };
 
             postToGoogleSheets("save", payload, () => punchModalBS.hide());
