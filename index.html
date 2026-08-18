@@ -21,6 +21,8 @@
         .border-rusak { border-left-color: #ef4444 !important; }
         .table-custom th { background-color: #0f172a; color: #ffffff; font-size: 0.75rem; text-transform: uppercase; white-space: nowrap; }
         .table-custom td { vertical-align: middle; white-space: nowrap; font-size: 0.8rem; }
+        .table-matrix th { font-size: 0.75rem; text-transform: uppercase; }
+        .table-matrix td { font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -84,6 +86,39 @@
             </div>
         </div>
 
+        <!-- TABEL REKAPITULASI (MATRIX PER POSISI & UKURAN) -->
+        <div class="card card-sm mb-3">
+            <div class="card-header bg-dark text-white py-2 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold small"><i class="fa-solid fa-chart-pie text-warning me-2"></i> Rekapitulasi Stok Per Posisi & Per Ukuran</h6>
+                <button class="btn btn-sm btn-outline-light py-0 px-2 fs-7" type="button" data-bs-toggle="collapse" data-bs-target="#matrixCollapse" aria-expanded="true">
+                    Toggle Tampilan
+                </button>
+            </div>
+            <div class="collapse show" id="matrixCollapse">
+                <div class="card-body p-2">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered align-middle text-center mb-0 table-matrix">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-start">Posisi</th>
+                                    <th class="text-start">Ukuran (cm)</th>
+                                    <th>Ready</th>
+                                    <th>Terpakai</th>
+                                    <th>Repair Int</th>
+                                    <th>Servis Vendor</th>
+                                    <th>Rusak</th>
+                                    <th>Total Pcs</th>
+                                </tr>
+                            </thead>
+                            <tbody id="matrixTableBody">
+                                <tr><td colspan="8" class="text-muted p-2">Belum ada data.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Filter Sederhana -->
         <div class="card card-sm mb-3">
             <div class="card-body p-2">
@@ -115,7 +150,7 @@
             </div>
         </div>
 
-        <!-- Tabel Stok -->
+        <!-- Tabel Detail Stok -->
         <div class="card card-sm overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0 table-custom">
@@ -318,6 +353,7 @@
                     document.getElementById('syncLoader').classList.add('d-none');
                     if (res.status === 'success') {
                         punchInventory = res.data || [];
+                        renderMatrixTable();
                         renderTable();
                     } else {
                         alert("Gagal membaca data: " + res.message);
@@ -354,6 +390,88 @@
                 document.getElementById('syncLoader').classList.add('d-none');
                 alert("Kesalahan koneksi saat menyimpan!");
             });
+        }
+
+        // FUNGSI UNTUK MERENDER TABEL REKAPITULASI (MATRIX)
+        function renderMatrixTable() {
+            const matrixBody = document.getElementById('matrixTableBody');
+            matrixBody.innerHTML = '';
+
+            if (punchInventory.length === 0) {
+                matrixBody.innerHTML = `<tr><td colspan="8" class="text-center p-2 text-muted">Belum ada data stok.</td></tr>`;
+                return;
+            }
+
+            // Grouping data berdasarkan Posisi dan Ukuran
+            const summaryMap = {};
+
+            punchInventory.forEach(item => {
+                const type = (String(getProp(item, 'type')) || 'UNKNOWN').toUpperCase();
+                const size = (String(getProp(item, 'size')) || 'N/A').toUpperCase();
+                const key = `${type}_${size}`;
+
+                if (!summaryMap[key]) {
+                    summaryMap[key] = {
+                        type: type,
+                        size: size,
+                        ready: 0,
+                        terpakai: 0,
+                        repair: 0,
+                        vendorService: 0,
+                        rusak: 0
+                    };
+                }
+
+                summaryMap[key].ready += Number(getProp(item, 'ready')) || 0;
+                summaryMap[key].terpakai += Number(getProp(item, 'terpakai')) || 0;
+                summaryMap[key].repair += Number(getProp(item, 'repair')) || 0;
+                summaryMap[key].vendorService += Number(getProp(item, 'vendorService')) || 0;
+                summaryMap[key].rusak += Number(getProp(item, 'rusak')) || 0;
+            });
+
+            // Urutkan key berdasarkan Posisi lalu Ukuran
+            const sortedKeys = Object.keys(summaryMap).sort();
+
+            let grandTotalReady = 0, grandTotalPakai = 0, grandTotalRepair = 0, grandTotalVendor = 0, grandTotalRusak = 0;
+
+            sortedKeys.forEach(key => {
+                const row = summaryMap[key];
+                const totalPcs = row.ready + row.terpakai + row.repair + row.vendorService + row.rusak;
+
+                grandTotalReady += row.ready;
+                grandTotalPakai += row.terpakai;
+                grandTotalRepair += row.repair;
+                grandTotalVendor += row.vendorService;
+                grandTotalRusak += row.rusak;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-start"><span class="badge ${row.type === 'UPPER' ? 'bg-secondary' : 'bg-info'}">${row.type}</span></td>
+                    <td class="text-start fw-bold">${row.size} cm</td>
+                    <td class="text-success fw-bold">${row.ready}</td>
+                    <td class="text-primary fw-bold">${row.terpakai}</td>
+                    <td class="text-warning fw-bold">${row.repair}</td>
+                    <td style="color:#7e22ce;" class="fw-bold">${row.vendorService}</td>
+                    <td class="text-danger fw-bold">${row.rusak}</td>
+                    <td class="fw-bold bg-light">${totalPcs}</td>
+                `;
+                matrixBody.appendChild(tr);
+            });
+
+            // Tampilkan Baris Grand Total
+            const grandTotalPcs = grandTotalReady + grandTotalPakai + grandTotalRepair + grandTotalVendor + grandTotalRusak;
+            const trTotal = document.createElement('tr');
+            trTotal.className = "table-dark fw-bold";
+            trTotal.innerHTML = `
+                <td colspan="2" class="text-start">TOTAL KESELURUHAN</td>
+                <td>${grandTotalReady}</td>
+                <td>${grandTotalPakai}</td>
+                <td>${grandTotalRepair}</td>
+                <td>${grandTotalVendor}</td>
+                <td>${grandTotalRusak}</td>
+                <td>${grandTotalPcs}</td>
+            `;
+            matrixBody.appendChild(trTotal);
         }
 
         function resetAllFilters() {
