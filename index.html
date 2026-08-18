@@ -74,7 +74,7 @@
             </div>
             <div class="col">
                 <div class="kpi-card border-vendor">
-                    <span class="small text-purple d-block fw-bold" style="color: #8b5cf6;">SERVIS VENDOR</span>
+                    <span class="small d-block fw-bold" style="color: #8b5cf6;">SERVIS VENDOR</span>
                     <h5 id="stat-vendor" class="fw-bold mb-0" style="color: #8b5cf6;">0</h5>
                 </div>
             </div>
@@ -86,15 +86,48 @@
             </div>
         </div>
 
+        <!-- TABEL KHUSUS: PUNCH SEDANG SERVIS DI VENDOR -->
+        <div class="card card-sm mb-3 border-purple" style="border-left: 4px solid #8b5cf6;">
+            <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 fw-bold small" style="color: #7e22ce;">
+                    <i class="fa-solid fa-truck-ramp-box me-2"></i> Daftar Punch Sedang Servis di Vendor
+                </h6>
+                <button class="btn btn-sm btn-outline-secondary py-0 px-2 fs-7" type="button" data-bs-toggle="collapse" data-bs-target="#activeVendorCollapse">
+                    Toggle Tampilan
+                </button>
+            </div>
+            <div class="collapse show" id="activeVendorCollapse">
+                <div class="card-body p-2">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0 table-matrix">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-start">Kode Punch</th>
+                                    <th>Ukuran / Tebal</th>
+                                    <th>Servis di Vendor / Bengkel</th>
+                                    <th class="text-center">Jumlah</th>
+                                    <th>Tgl Kirim / Catatan / Surat Jalan</th>
+                                    <th class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activeVendorTableBody">
+                                <tr><td colspan="6" class="text-center text-muted p-2">Tidak ada punch yang sedang diservis di vendor.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- TABEL REKAPITULASI (MATRIX PER POSISI & UKURAN) -->
         <div class="card card-sm mb-3">
             <div class="card-header bg-dark text-white py-2 d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 fw-bold small"><i class="fa-solid fa-chart-pie text-warning me-2"></i> Rekapitulasi Stok Per Posisi & Per Ukuran</h6>
-                <button class="btn btn-sm btn-outline-light py-0 px-2 fs-7" type="button" data-bs-toggle="collapse" data-bs-target="#matrixCollapse" aria-expanded="true">
+                <button class="btn btn-sm btn-outline-light py-0 px-2 fs-7" type="button" data-bs-toggle="collapse" data-bs-target="#matrixCollapse">
                     Toggle Tampilan
                 </button>
             </div>
-            <div class="collapse show" id="matrixCollapse">
+            <div class="collapse" id="matrixCollapse">
                 <div class="card-body p-2">
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered align-middle text-center mb-0 table-matrix">
@@ -150,17 +183,17 @@
             </div>
         </div>
 
-        <!-- Tabel Detail Stok -->
+        <!-- Tabel Detail Stok Utama -->
         <div class="card card-sm overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0 table-custom">
                     <thead>
                         <tr>
                             <th class="px-3">Kode Punch</th>
-                            <th>Vendor</th>
+                            <th>Vendor Pembuat</th>
                             <th>Posisi</th>
                             <th>Ukuran</th>
-                            <th>Tebal (Thickness)</th>
+                            <th>Tebal</th>
                             <th>Lokasi / Lini</th>
                             <th class="text-center">Rincian Stok (Pcs)</th>
                             <th class="text-center">Total</th>
@@ -174,7 +207,7 @@
 
     </main>
 
-    <!-- Form Input Data -->
+    <!-- FORM INPUT DATA (DENGAN PILIHAN STATUS STOK SINGLE) -->
     <div class="modal fade" id="punchModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -192,7 +225,7 @@
                                 <input type="text" id="formCode" required class="form-control form-control-sm" placeholder="Contoh: P6060-01">
                             </div>
                             <div class="col-6">
-                                <label class="form-label small fw-bold">Vendor / Merk *</label>
+                                <label class="form-label small fw-bold">Vendor Pembuat *</label>
                                 <input type="text" id="formVendor" required class="form-control form-control-sm" placeholder="Contoh: MDI / SAP">
                             </div>
                         </div>
@@ -226,14 +259,29 @@
                             </div>
                         </div>
 
+                        <!-- INPUT STOK SATU PER SATU -->
                         <div class="p-2 border rounded bg-light mt-3">
-                            <label class="form-label small fw-bold d-block mb-1">Rincian Stok Saat Ini (Pcs)</label>
+                            <label class="form-label small fw-bold d-block mb-1 text-primary">Input Jumlah Stok</label>
                             <div class="row g-2">
-                                <div class="col"><small class="text-success fw-bold d-block">Ready</small><input type="number" id="formReady" value="0" min="0" class="form-control form-control-sm"></div>
-                                <div class="col"><small class="text-primary fw-bold d-block">Pakai</small><input type="number" id="formTerpakai" value="0" min="0" class="form-control form-control-sm"></div>
-                                <div class="col"><small class="text-warning fw-bold d-block">Repair</small><input type="number" id="formRepair" value="0" min="0" class="form-control form-control-sm"></div>
-                                <div class="col"><small class="fw-bold d-block" style="color: #8b5cf6;">Servis Vendor</small><input type="number" id="formVendorService" value="0" min="0" class="form-control form-control-sm"></div>
-                                <div class="col"><small class="text-danger fw-bold d-block">Rusak</small><input type="number" id="formRusak" value="0" min="0" class="form-control form-control-sm"></div>
+                                <div class="col-7">
+                                    <label class="form-label small">Pilih Status Stok *</label>
+                                    <select id="formSelectedStatus" onchange="handleStatusChange()" class="form-select form-select-sm">
+                                        <option value="ready">Ready</option>
+                                        <option value="terpakai">Terpakai (Di Press)</option>
+                                        <option value="repair">Repair Internal</option>
+                                        <option value="vendorService">Servis Vendor</option>
+                                        <option value="rusak">Rusak / Afkir</option>
+                                    </select>
+                                </div>
+                                <div class="col-5">
+                                    <label class="form-label small">Jumlah (Pcs) *</label>
+                                    <input type="number" id="formSelectedQty" value="1" min="0" required class="form-control form-control-sm">
+                                </div>
+                            </div>
+                            <!-- Field Kondisional: Hanya muncul jika Servis Vendor dipilih -->
+                            <div class="mt-2 d-none" id="vendorNameContainer">
+                                <label class="form-label small fw-bold text-purple" style="color:#7e22ce;">Nama Vendor / Bengkel Servis *</label>
+                                <input type="text" id="formActiveVendorName" class="form-control form-control-sm" placeholder="Contoh: Bengkel Presisi / PT MDI">
                             </div>
                         </div>
 
@@ -277,13 +325,13 @@
                                 <input type="number" id="mutQty" min="1" value="1" required class="form-control form-control-sm">
                             </div>
                             <div class="col-6">
-                                <label class="form-label small fw-bold">Nama Vendor / Bengkel</label>
-                                <input type="text" id="mutVendorName" class="form-control form-control-sm" placeholder="Isi jika kirim servis">
+                                <label class="form-label small fw-bold">Nama Vendor / Bengkel Servis *</label>
+                                <input type="text" id="mutVendorName" class="form-control form-control-sm" placeholder="Wajib isi jika kirim servis">
                             </div>
                         </div>
                         <div class="mb-2">
                             <label class="form-label small fw-bold">Catatan Mutasi / Surat Jalan *</label>
-                            <textarea id="mutNotes" required class="form-control form-control-sm" rows="2" placeholder="Contoh: Kirim relapping ke Vendor MDI (SJ-102)"></textarea>
+                            <textarea id="mutNotes" required class="form-control form-control-sm" rows="2" placeholder="Contoh: Kirim relapping (No. Surat Jalan: SJ-102)"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer py-1">
@@ -353,6 +401,7 @@
                     document.getElementById('syncLoader').classList.add('d-none');
                     if (res.status === 'success') {
                         punchInventory = res.data || [];
+                        renderActiveVendorTable();
                         renderMatrixTable();
                         renderTable();
                     } else {
@@ -392,7 +441,60 @@
             });
         }
 
-        // FUNGSI UNTUK MERENDER TABEL REKAPITULASI (MATRIX)
+        // Tampilkan input vendor jika status Servis Vendor dipilih
+        function handleStatusChange() {
+            const selectedStatus = document.getElementById('formSelectedStatus').value;
+            const vendorContainer = document.getElementById('vendorNameContainer');
+            if (selectedStatus === 'vendorService') {
+                vendorContainer.classList.remove('d-none');
+            } else {
+                vendorContainer.classList.add('d-none');
+            }
+        }
+
+        // RENDER TABEL SERVIS VENDOR
+        function renderActiveVendorTable() {
+            const tbody = document.getElementById('activeVendorTableBody');
+            tbody.innerHTML = '';
+
+            const activeItems = punchInventory.filter(item => (Number(getProp(item, 'vendorService')) || 0) > 0);
+
+            if (activeItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-2">Tidak ada punch yang sedang diservis di vendor saat ini.</td></tr>`;
+                return;
+            }
+
+            activeItems.forEach(item => {
+                const id = getProp(item, 'id');
+                const code = getProp(item, 'code');
+                const size = getProp(item, 'size');
+                const thick = getProp(item, 'thickness');
+                const vendorCount = Number(getProp(item, 'vendorService')) || 0;
+                const activeVendor = getProp(item, 'activeVendorName') || 'Vendor Belum Dicatat';
+
+                let historyList = item.history || [];
+                if (typeof historyList === 'string') {
+                    try { historyList = JSON.parse(historyList); } catch(e) { historyList = []; }
+                }
+
+                const lastVendorLog = historyList.find(log => log.action && log.action.includes('KIRIM_VENDOR')) || {};
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="text-start fw-bold text-primary">${code}</td>
+                    <td>${size} cm / ${thick ? thick + ' mm' : '-'}</td>
+                    <td><span class="badge bg-purple-subtle" style="background:#f3e8ff; color:#7e22ce; font-size:0.85rem;"><i class="fa-solid fa-industry me-1"></i> ${activeVendor}</span></td>
+                    <td class="text-center fw-bold text-purple" style="color:#7e22ce;">${vendorCount} Pcs</td>
+                    <td class="small text-muted">${lastVendorLog.time ? '<strong>' + lastVendorLog.time + '</strong>: ' : ''}${lastVendorLog.notes || '-'}</td>
+                    <td class="text-center">
+                        <button onclick="openMutationModal('${id}')" class="btn btn-sm btn-success py-0 px-2 fs-7" title="Selesai Servis"><i class="fa-solid fa-check me-1"></i> Terima Kembali</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // RENDER TABEL MATRIX
         function renderMatrixTable() {
             const matrixBody = document.getElementById('matrixTableBody');
             matrixBody.innerHTML = '';
@@ -402,7 +504,6 @@
                 return;
             }
 
-            // Grouping data berdasarkan Posisi dan Ukuran
             const summaryMap = {};
 
             punchInventory.forEach(item => {
@@ -411,15 +512,7 @@
                 const key = `${type}_${size}`;
 
                 if (!summaryMap[key]) {
-                    summaryMap[key] = {
-                        type: type,
-                        size: size,
-                        ready: 0,
-                        terpakai: 0,
-                        repair: 0,
-                        vendorService: 0,
-                        rusak: 0
-                    };
+                    summaryMap[key] = { type: type, size: size, ready: 0, terpakai: 0, repair: 0, vendorService: 0, rusak: 0 };
                 }
 
                 summaryMap[key].ready += Number(getProp(item, 'ready')) || 0;
@@ -429,7 +522,6 @@
                 summaryMap[key].rusak += Number(getProp(item, 'rusak')) || 0;
             });
 
-            // Urutkan key berdasarkan Posisi lalu Ukuran
             const sortedKeys = Object.keys(summaryMap).sort();
 
             let grandTotalReady = 0, grandTotalPakai = 0, grandTotalRepair = 0, grandTotalVendor = 0, grandTotalRusak = 0;
@@ -458,7 +550,6 @@
                 matrixBody.appendChild(tr);
             });
 
-            // Tampilkan Baris Grand Total
             const grandTotalPcs = grandTotalReady + grandTotalPakai + grandTotalRepair + grandTotalVendor + grandTotalRusak;
             const trTotal = document.createElement('tr');
             trTotal.className = "table-dark fw-bold";
@@ -569,6 +660,8 @@
         function openModal(mode, id = null) {
             const form = document.getElementById('punchForm');
             form.reset();
+            document.getElementById('vendorNameContainer').classList.add('d-none');
+
             if (mode === 'edit') {
                 const item = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
                 if (item) {
@@ -580,14 +673,37 @@
                     document.getElementById('formThickness').value = getProp(item, 'thickness');
                     document.getElementById('formLine').value = getProp(item, 'line');
                     document.getElementById('formRackLocation').value = getProp(item, 'rackLocation');
-                    document.getElementById('formReady').value = getProp(item, 'ready');
-                    document.getElementById('formTerpakai').value = getProp(item, 'terpakai');
-                    document.getElementById('formRepair').value = getProp(item, 'repair');
-                    document.getElementById('formVendorService').value = getProp(item, 'vendorService') || 0;
-                    document.getElementById('formRusak').value = getProp(item, 'rusak');
+
+                    // Cari status dominan yang sedang terisi
+                    const r = Number(getProp(item, 'ready')) || 0;
+                    const t = Number(getProp(item, 'terpakai')) || 0;
+                    const rp = Number(getProp(item, 'repair')) || 0;
+                    const v = Number(getProp(item, 'vendorService')) || 0;
+                    const rsk = Number(getProp(item, 'rusak')) || 0;
+
+                    if (v > 0) {
+                        document.getElementById('formSelectedStatus').value = 'vendorService';
+                        document.getElementById('formSelectedQty').value = v;
+                        document.getElementById('formActiveVendorName').value = getProp(item, 'activeVendorName') || '';
+                        document.getElementById('vendorNameContainer').classList.remove('d-none');
+                    } else if (t > 0) {
+                        document.getElementById('formSelectedStatus').value = 'terpakai';
+                        document.getElementById('formSelectedQty').value = t;
+                    } else if (rp > 0) {
+                        document.getElementById('formSelectedStatus').value = 'repair';
+                        document.getElementById('formSelectedQty').value = rp;
+                    } else if (rsk > 0) {
+                        document.getElementById('formSelectedStatus').value = 'rusak';
+                        document.getElementById('formSelectedQty').value = rsk;
+                    } else {
+                        document.getElementById('formSelectedStatus').value = 'ready';
+                        document.getElementById('formSelectedQty').value = r;
+                    }
                 }
             } else {
                 document.getElementById('punchId').value = '';
+                document.getElementById('formSelectedStatus').value = 'ready';
+                document.getElementById('formSelectedQty').value = 1;
             }
             punchModalBS.show();
         }
@@ -595,6 +711,29 @@
         function handleFormSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('punchId').value;
+            const selectedStatus = document.getElementById('formSelectedStatus').value;
+            const selectedQty = Number(document.getElementById('formSelectedQty').value) || 0;
+            const activeVendor = document.getElementById('formActiveVendorName').value.trim();
+
+            // Set default semua status stok 0, lalu set status pilihan ke nilai selectedQty
+            let ready = 0, terpakai = 0, repair = 0, vendorService = 0, rusak = 0;
+            let activeVendorName = '';
+
+            if (selectedStatus === 'ready') ready = selectedQty;
+            else if (selectedStatus === 'terpakai') terpakai = selectedQty;
+            else if (selectedStatus === 'repair') repair = selectedQty;
+            else if (selectedStatus === 'vendorService') {
+                vendorService = selectedQty;
+                activeVendorName = activeVendor;
+                if (!activeVendorName) return alert("Harap isi Nama Vendor / Bengkel Servis!");
+            } else if (selectedStatus === 'rusak') rusak = selectedQty;
+
+            let existingHistory = [];
+            if (id) {
+                const existingItem = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
+                if (existingItem) existingHistory = existingItem.history || [];
+            }
+
             const payload = {
                 id: id || 'PUNCH_' + Date.now(),
                 code: document.getElementById('formCode').value.trim(),
@@ -604,11 +743,13 @@
                 thickness: document.getElementById('formThickness').value.trim(),
                 line: document.getElementById('formLine').value.trim(),
                 rackLocation: document.getElementById('formRackLocation').value.trim(),
-                ready: Number(document.getElementById('formReady').value) || 0,
-                terpakai: Number(document.getElementById('formTerpakai').value) || 0,
-                repair: Number(document.getElementById('formRepair').value) || 0,
-                vendorService: Number(document.getElementById('formVendorService').value) || 0,
-                rusak: Number(document.getElementById('formRusak').value) || 0
+                ready: ready,
+                terpakai: terpakai,
+                repair: repair,
+                vendorService: vendorService,
+                rusak: rusak,
+                activeVendorName: activeVendorName,
+                history: existingHistory
             };
             postToGoogleSheets("save", payload, () => punchModalBS.hide());
         }
@@ -619,6 +760,7 @@
 
             document.getElementById('mutPunchId').value = id;
             document.getElementById('mutNotes').value = '';
+            document.getElementById('mutVendorName').value = getProp(item, 'activeVendorName') || '';
             document.getElementById('mutPunchInfo').innerHTML = `
                 <strong>${getProp(item, 'code')}</strong> | Ready: ${getProp(item, 'ready')} | Repair Int: ${getProp(item, 'repair')} | Servis Vendor: <strong>${getProp(item, 'vendorService') || 0}</strong>
             `;
@@ -630,8 +772,8 @@
             const id = document.getElementById('mutPunchId').value;
             const action = document.getElementById('mutActionType').value;
             const qty = Number(document.getElementById('mutQty').value) || 1;
-            const vendorName = document.getElementById('mutVendorName').value;
-            const notes = document.getElementById('mutNotes').value;
+            const vendorName = document.getElementById('mutVendorName').value.trim();
+            const notes = document.getElementById('mutNotes').value.trim();
 
             const item = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
             if (!item) return;
@@ -641,6 +783,7 @@
             let repair = Number(getProp(item, 'repair')) || 0;
             let vendorService = Number(getProp(item, 'vendorService')) || 0;
             let rusak = Number(getProp(item, 'rusak')) || 0;
+            let activeVendorName = getProp(item, 'activeVendorName') || '';
 
             if (action === 'PASANG_MESIN') {
                 if (ready < qty) return alert("Stok Ready kurang!");
@@ -649,13 +792,16 @@
                 if (terpakai < qty) return alert("Stok Terpakai kurang!");
                 terpakai -= qty; repair += qty;
             } else if (action === 'KIRIM_VENDOR') {
+                if (!vendorName) return alert("Harap isi Nama Vendor / Bengkel Servis!");
                 if (repair >= qty) repair -= qty;
                 else if (ready >= qty) ready -= qty;
                 else return alert("Stok Repair / Ready tidak cukup untuk dikirim ke vendor!");
                 vendorService += qty;
+                activeVendorName = vendorName;
             } else if (action === 'KEMBALI_VENDOR') {
                 if (vendorService < qty) return alert("Jumlah melebihi stok yang sedang servis di vendor!");
                 vendorService -= qty; ready += qty;
+                if (vendorService === 0) activeVendorName = '';
             } else if (action === 'FINISH_REPAIR') {
                 if (repair < qty) return alert("Stok Repair internal kurang!");
                 repair -= qty; ready += qty;
@@ -680,7 +826,7 @@
                 notes: notes
             });
 
-            const payload = { ...item, ready, terpakai, repair, vendorService, rusak, history: historyList };
+            const payload = { ...item, ready, terpakai, repair, vendorService, rusak, activeVendorName, history: historyList };
             postToGoogleSheets("save", payload, () => mutationModalBS.hide());
         }
 
