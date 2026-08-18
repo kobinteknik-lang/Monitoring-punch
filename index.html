@@ -3,717 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Stok Punch Keramik</title>
+    <title>Monitoring Stok & Servis Punch Keramik</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap 5 CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- QR Code Library Generator -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        :root {
-            --primary-dark: #0f172a;
-            --accent-gold: #f59e0b;
-            --bg-main: #f8fafc;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-main);
-            color: #334155;
-            user-select: none;
-            overflow-x: hidden;
-        }
-
-        .hero-header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            border-bottom: 3px solid var(--accent-gold);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25);
-        }
-
-        .header-icon {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: #0f172a;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-        }
-
-        .card-modern {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.08);
-            transition: all 0.2s ease;
-        }
-
-        .kpi-compact-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 10px 14px;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-            position: relative;
-        }
-
-        .kpi-compact-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
-        }
-
-        .kpi-compact-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.95rem;
-            flex-shrink: 0;
-        }
-
-        .kpi-title {
-            font-size: 0.68rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-            margin-bottom: 2px;
-            white-space: nowrap;
-        }
-
-        .kpi-number {
-            font-size: 1.35rem;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .border-left-total { border-left: 4px solid #64748b !important; }
-        .border-left-ready { border-left: 4px solid #10b981 !important; }
-        .border-left-pakai { border-left: 4px solid #3b82f6 !important; }
-        .border-left-repair { border-left: 4px solid #f59e0b !important; }
-        .border-left-rusak { border-left: 4px solid #f43f5e !important; }
-
-        .badge-upper {
-            background: #f3e8ff;
-            color: #7e22ce;
-            border: 1px solid #d8b4fe;
-            font-weight: 700;
-        }
-
-        .badge-lower {
-            background: #ccfbf1;
-            color: #0f766e;
-            border: 1px solid #99f6e4;
-            font-weight: 700;
-        }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .table-custom-main {
-            min-width: 1280px;
-            table-layout: auto;
-        }
-
-        .table-custom-dashboard {
-            min-width: 850px;
-            table-layout: auto;
-        }
-
-        .table-modern thead th {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            padding: 12px;
-            border: none;
-            white-space: nowrap;
-        }
-
-        .table td, .table th {
-            vertical-align: middle;
-            white-space: nowrap;
-        }
-
-        .table-wrap-cell {
-            white-space: normal !important;
-            word-break: break-word;
-            min-width: 120px;
-            max-width: 220px;
-        }
-
-        .form-control, .form-select {
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            padding: 0.45rem 0.75rem;
-            font-size: 0.85rem;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #f59e0b;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
-        }
-
-        .alert-kritis {
-            background: #fff1f2;
-            border-left: 5px solid #e11d48;
-            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08);
-        }
-
-        .qr-label-card-simple {
-            border: 2px dashed #0f172a;
-            border-radius: 8px;
-            background: #ffffff;
-            padding: 16px;
-            max-width: 220px;
-            margin: 0 auto;
-        }
-
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            #printableQrArea, #printableQrArea * {
-                visibility: visible;
-            }
-            #printableQrArea {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
-            .qr-label-card-simple {
-                border: 2px solid #000000 !important;
-            }
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #334155; }
+        .hero-header { background: #0f172a; border-bottom: 3px solid #f59e0b; }
+        .card-sm { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; }
+        .kpi-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; border-left: 4px solid #64748b; }
+        .border-ready { border-left-color: #10b981 !important; }
+        .border-pakai { border-left-color: #3b82f6 !important; }
+        .border-repair { border-left-color: #f59e0b !important; }
+        .border-vendor { border-left-color: #8b5cf6 !important; }
+        .border-rusak { border-left-color: #ef4444 !important; }
+        .table-custom th { background-color: #0f172a; color: #ffffff; font-size: 0.75rem; text-transform: uppercase; white-space: nowrap; }
+        .table-custom td { vertical-align: middle; white-space: nowrap; font-size: 0.8rem; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <!-- Header Navbar -->
-    <header class="hero-header text-white py-3 sticky-top">
-        <div class="container-fluid px-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <div class="header-icon p-2.5 rounded-3 d-flex align-items-center justify-content-center">
-                    <i class="fa-solid fa-layer-group fs-4"></i>
-                </div>
-                <div>
-                    <h1 class="h5 mb-0 fw-extrabold text-white tracking-tight">MONITORING PUNCH</h1>
-                    <small class="text-slate-400 opacity-75">Cloud Connected: Google Sheets Realtime API</small>
-                </div>
+    <header class="hero-header text-white py-2 sticky-top">
+        <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-boxes-stacked text-warning fs-5"></i>
+                <h1 class="h6 mb-0 fw-bold">MONITORING STOK & SERVIS PUNCH</h1>
             </div>
             <div class="d-flex gap-2">
-                <button onclick="fetchFromGoogleSheets()" class="btn btn-outline-light btn-sm fw-bold rounded-3">
-                    <i class="fa-solid fa-rotate me-1"></i> Sync Data
-                </button>
-                <button onclick="openModal('add')" class="btn btn-warning fw-bold px-3 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2 btn-sm">
-                    <i class="fa-solid fa-plus-circle"></i> Tambah Punch
-                </button>
+                <button onclick="fetchFromGoogleSheets()" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-rotate me-1"></i> Sync</button>
+                <button onclick="openModal('add')" class="btn btn-warning btn-sm fw-bold"><i class="fa-solid fa-plus me-1"></i> Tambah Data</button>
             </div>
         </div>
     </header>
 
-    <main class="container-fluid px-4 py-4 space-y-4">
+    <main class="container-fluid px-3 py-3">
 
-        <!-- Status Sync Loader -->
-        <div id="syncLoader" class="alert alert-info d-none p-2 rounded-3 text-center small fw-semibold">
-            <i class="fa-solid fa-spinner fa-spin me-2"></i> Menghubungkan ke Google Sheets...
+        <div id="syncLoader" class="alert alert-info d-none p-2 text-center small fw-bold">
+            <i class="fa-solid fa-spinner fa-spin me-2"></i> Menghubungkan ke Cloud...
         </div>
 
-        <!-- Banner Alert Peringatan Stok Kritis -->
-        <div id="alertBanner" class="alert alert-kritis d-none rounded-3 p-3 mb-3" role="alert">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="p-2 bg-danger text-white rounded-3 shadow-sm">
-                        <i class="fa-solid fa-triangle-exclamation fs-5"></i>
-                    </div>
-                    <div>
-                        <h6 class="fw-bold mb-0 text-danger">Peringatan Kritis Stok Punch!</h6>
-                        <small id="alertBannerText" class="text-danger-emphasis d-block mt-0.5"></small>
-                    </div>
-                </div>
-                <button onclick="showCriticalItemsOnly()" class="btn btn-danger btn-sm fw-bold px-3 rounded-3 shadow-sm text-nowrap">
-                    Tampilkan Item Kritis
-                </button>
-            </div>
-        </div>
-
-        <!-- Compact KPI Grid Cards -->
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-2.5 mb-3">
+        <!-- KPI Ringkasan Stok & Servis -->
+        <div class="row g-2 mb-3">
             <div class="col">
-                <div class="kpi-compact-card border-left-total d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="kpi-title text-muted d-block">Total Unit</span>
-                        <div id="stat-total" class="kpi-number text-slate-800">0</div>
-                    </div>
-                    <div class="kpi-compact-icon bg-slate-100 text-slate-600">
-                        <i class="fa-solid fa-cubes"></i>
-                    </div>
+                <div class="kpi-card">
+                    <span class="small text-muted d-block fw-bold">TOTAL</span>
+                    <h5 id="stat-total" class="fw-bold mb-0">0</h5>
                 </div>
             </div>
             <div class="col">
-                <div class="kpi-compact-card border-left-ready d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="kpi-title text-success d-block">Ready (Siap)</span>
-                        <div id="stat-ready" class="kpi-number text-success">0</div>
-                    </div>
-                    <div class="kpi-compact-icon bg-success bg-opacity-10 text-success">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
+                <div class="kpi-card border-ready">
+                    <span class="small text-success d-block fw-bold">READY</span>
+                    <h5 id="stat-ready" class="fw-bold text-success mb-0">0</h5>
                 </div>
             </div>
             <div class="col">
-                <div class="kpi-compact-card border-left-pakai d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="kpi-title text-primary d-block">Terpakai</span>
-                        <div id="stat-terpakai" class="kpi-number text-primary">0</div>
-                    </div>
-                    <div class="kpi-compact-icon bg-primary bg-opacity-10 text-primary">
-                        <i class="fa-solid fa-gears"></i>
-                    </div>
+                <div class="kpi-card border-pakai">
+                    <span class="small text-primary d-block fw-bold">TERPAKAI</span>
+                    <h5 id="stat-terpakai" class="fw-bold text-primary mb-0">0</h5>
                 </div>
             </div>
             <div class="col">
-                <div class="kpi-compact-card border-left-repair d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="kpi-title text-warning-emphasis d-block">Repair</span>
-                        <div id="stat-repair" class="kpi-number text-warning-emphasis">0</div>
-                    </div>
-                    <div class="kpi-compact-icon bg-warning bg-opacity-10 text-warning-emphasis">
-                        <i class="fa-solid fa-wrench"></i>
-                    </div>
+                <div class="kpi-card border-repair">
+                    <span class="small text-warning d-block fw-bold">REPAIR INTERNAL</span>
+                    <h5 id="stat-repair" class="fw-bold text-warning mb-0">0</h5>
                 </div>
             </div>
             <div class="col">
-                <div class="kpi-compact-card border-left-rusak d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="kpi-title text-danger d-block">Rusak / Afkir</span>
-                        <div id="stat-rusak" class="kpi-number text-danger">0</div>
-                    </div>
-                    <div class="kpi-compact-icon bg-danger bg-opacity-10 text-danger">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
+                <div class="kpi-card border-vendor">
+                    <span class="small text-purple d-block fw-bold" style="color: #8b5cf6;">SERVIS VENDOR</span>
+                    <h5 id="stat-vendor" class="fw-bold mb-0" style="color: #8b5cf6;">0</h5>
+                </div>
+            </div>
+            <div class="col">
+                <div class="kpi-card border-rusak">
+                    <span class="small text-danger d-block fw-bold">RUSAK</span>
+                    <h5 id="stat-rusak" class="fw-bold text-danger mb-0">0</h5>
                 </div>
             </div>
         </div>
 
-        <!-- Dasbor Ringkasan Stok Punch Per Ukuran & Permukaan -->
-        <div class="card card-modern mb-3">
-            <div class="card-header bg-white py-2.5 px-3 d-flex justify-content-between align-items-center border-bottom-0">
-                <h6 class="fw-bold mb-0 text-slate-800 text-uppercase d-flex align-items-center gap-2 small">
-                    <i class="fa-solid fa-chart-pie text-warning fs-6"></i> Ringkasan Stok Punch Per Ukuran & Permukaan
-                </h6>
-                <span class="badge bg-slate-100 text-slate-500 font-medium" style="font-size: 0.7rem;">Klik baris untuk memfilter</span>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 table-custom-dashboard" style="font-size: 0.8rem;">
-                        <thead class="table-light text-uppercase fw-bold text-slate-600">
-                            <tr>
-                                <th class="px-3 py-2">Ukuran (cm)</th>
-                                <th class="px-3 py-2">Permukaan</th>
-                                <th class="px-3 py-2">Ex Supplier / Vendor</th>
-                                <th class="px-3 py-2 text-center">Total</th>
-                                <th class="px-3 py-2 text-center text-success">Ready</th>
-                                <th class="px-3 py-2 text-center text-primary">Terpakai</th>
-                                <th class="px-3 py-2 text-center text-warning-emphasis">Repair</th>
-                                <th class="px-3 py-2 text-center text-danger">Rusak</th>
-                                <th class="px-3 py-2 text-center">Status Buffer</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sizeDashboardTable"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section Filter & Search -->
-        <div class="card card-modern mb-3">
-            <div class="card-body p-2.5">
-                <div class="row g-2 align-items-center">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="fa-solid fa-search"></i></span>
-                            <input type="text" id="searchInput" oninput="renderTable()" class="form-control border-start-0" placeholder="Cari Kode, Vendor, Rak...">
-                        </div>
+        <!-- Filter Sederhana -->
+        <div class="card card-sm mb-3">
+            <div class="card-body p-2">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <input type="text" id="searchInput" oninput="renderTable()" class="form-control form-control-sm" placeholder="Cari Kode, Vendor, Ukuran, Rak...">
                     </div>
-                    <div class="col-12 col-sm-6 col-md-2">
-                        <select id="filterType" onchange="renderTable()" class="form-select form-select-sm">
-                            <option value="ALL">Semua Posisi (Upper/Lower)</option>
-                            <option value="UPPER">Punch UPPER</option>
-                            <option value="LOWER">Punch LOWER</option>
-                        </select>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-2">
-                        <select id="filterSurface" onchange="renderTable()" class="form-select form-select-sm">
-                            <option value="ALL">Semua Permukaan</option>
-                            <option value="Polos">Polos (Flat)</option>
-                            <option value="Motif">Bermotif (Relief)</option>
-                        </select>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-2">
+                    <div class="col-md-3">
                         <select id="filterCondition" onchange="renderTable()" class="form-select form-select-sm">
-                            <option value="ALL">Semua Kondisi</option>
-                            <option value="Ready">Ready (Siap Pakai)</option>
-                            <option value="Terpakai">Terpakai (In-Press)</option>
-                            <option value="Repair">Repair (Perbaikan)</option>
-                            <option value="Rusak">Rusak / Scrap</option>
+                            <option value="ALL">-- Semua Status Stok --</option>
+                            <option value="Ready">Ready</option>
+                            <option value="Terpakai">Terpakai</option>
+                            <option value="Repair">Repair Internal</option>
+                            <option value="Vendor">Sedang Servis Vendor</option>
+                            <option value="Rusak">Rusak</option>
                         </select>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-2">
-                        <select id="filterAlert" onchange="renderTable()" class="form-select form-select-sm">
-                            <option value="ALL">Semua Stok Buffer</option>
-                            <option value="LOW">Peringatan: Kritis</option>
+                    <div class="col-md-3">
+                        <select id="filterType" onchange="renderTable()" class="form-select form-select-sm">
+                            <option value="ALL">-- Semua Posisi --</option>
+                            <option value="UPPER">UPPER</option>
+                            <option value="LOWER">LOWER</option>
                         </select>
                     </div>
-                    <div class="col-12 col-sm-6 col-md-1">
-                        <button type="button" onclick="resetAllFilters()" class="btn btn-light border btn-sm w-100 py-1 rounded-2 text-secondary text-nowrap" title="Reset Filter" style="font-size: 0.75rem;">
-                            <i class="fa-solid fa-rotate-left me-1"></i> Reset
-                        </button>
+                    <div class="col-md-2">
+                        <button onclick="resetAllFilters()" class="btn btn-light border btn-sm w-100">Reset Filter</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Table Master Stok Punch -->
-        <div class="card card-modern overflow-hidden">
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0 table-modern table-custom-main" style="font-size: 0.825rem;">
-                        <thead>
-                            <tr>
-                                <th class="py-2.5 px-3">Kode Punch</th>
-                                <th class="py-2.5 px-3">Vendor / Supplier</th>
-                                <th class="py-2.5 px-3">Posisi</th>
-                                <th class="py-2.5 px-3">Finishing</th>
-                                <th class="py-2.5 px-3">Ukuran & Tebal</th>
-                                <th class="py-2.5 px-3 text-center">SHG (%)</th>
-                                <th class="py-2.5 px-3">Pelapis</th>
-                                <th class="py-2.5 px-3">Surface / Motif</th>
-                                <th class="py-2.5 px-3">Lini & Rak</th>
-                                <th class="py-2.5 px-3 text-center">Rincian Stok</th>
-                                <th class="py-2.5 px-3 text-center">Total</th>
-                                <th class="py-2.5 px-3 text-center">Status Buffer</th>
-                                <th class="py-2.5 px-3 text-center">Aksi Operasional</th>
-                            </tr>
-                        </thead>
-                        <tbody id="punchTableBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
-                <div id="emptyState" class="d-none text-center py-5 text-muted">
-                    <i class="fa-solid fa-box-open fs-1 mb-2 text-slate-300"></i>
-                    <p class="mb-0 fw-semibold small">Tidak ada data Punch yang sesuai dengan filter.</p>
-                </div>
+        <!-- Tabel Stok -->
+        <div class="card card-sm overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-custom">
+                    <thead>
+                        <tr>
+                            <th class="px-3">Kode Punch</th>
+                            <th>Vendor</th>
+                            <th>Posisi</th>
+                            <th>Ukuran</th>
+                            <th>Lokasi / Lini</th>
+                            <th class="text-center">Rincian Stok (Pcs)</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="punchTableBody"></tbody>
+                </table>
             </div>
         </div>
 
     </main>
 
-    <!-- Modal Form Tambah/Edit Punch -->
+    <!-- Form Input Sederhana -->
     <div class="modal fade" id="punchModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="modal-header hero-header text-white px-4 py-3">
-                    <h5 class="modal-title fw-bold" id="modalTitle">Tambah Data Punch</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header hero-header text-white py-2">
+                    <h6 class="modal-title fw-bold" id="modalTitle">Form Data Punch</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="punchForm" onsubmit="handleFormSubmit(event)">
-                    <div class="modal-body p-4 space-y-3">
+                    <div class="modal-body p-3">
                         <input type="hidden" id="punchId">
-
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Kode Punch *</label>
-                                <input type="text" id="formCode" required class="form-control" placeholder="Tulis Kode SAP Disini">
+                        
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Kode Punch *</label>
+                                <input type="text" id="formCode" required class="form-control form-control-sm" placeholder="Contoh: P6060-01">
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">No. Seri *</label>
-                                <input type="text" id="formSerialNo" required class="form-control" placeholder="Tulis Jika Ada">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-primary small">Vendor / Supplier *</label>
-                                <input type="text" id="formVendor" required class="form-control bg-primary-subtle border-primary-subtle" placeholder="OB/MDI/SAP/ITA">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Vendor / Merk *</label>
+                                <input type="text" id="formVendor" required class="form-control form-control-sm" placeholder="Contoh: MDI / SAP">
                             </div>
                         </div>
 
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Posisi Matras *</label>
-                                <select id="formType" required class="form-select">
-                                    <option value="UPPER">UPPER (Matras Atas)</option>
-                                    <option value="LOWER">LOWER (Matras Bawah)</option>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Posisi *</label>
+                                <select id="formType" class="form-select form-select-sm">
+                                    <option value="UPPER">UPPER (Atas)</option>
+                                    <option value="LOWER">LOWER (Bawah)</option>
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Jumlah Outlet/Cavity *</label>
-                                <select id="formCavity" required class="form-select">
-                                    <option value="1 Cavity">1 Cavity</option>
-                                    <option value="2 Cavity">2 Cavity</option>
-                                    <option value="3 Cavity">3 Cavity</option>
-                                    <option value="4 Cavity">4 Cavity</option>
-                                    <option value="5 Cavity">5 Cavity</option>
-                                    <option value="6 Cavity">6 Cavity</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Tipe Finishing *</label>
-                                <select id="formProcessType" required class="form-select">
-                                    <option value="Basic / Standart">Basic / Standart</option>
-                                    <option value="Polishing">Polishing</option>
-                                    <option value="Rectified">Rectified</option>
-                                    <option value="Squaring">Squaring</option>
-                                </select>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Ukuran (cm) *</label>
+                                <input type="text" id="formSize" required class="form-control form-control-sm" placeholder="Contoh: 60x60">
                             </div>
                         </div>
 
-                        <div class="row g-3 mt-1">
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Material Pelapis *</label>
-                                <select id="formCoating" required class="form-select">
-                                    <option value="Karet PU (Polyurethane)">Karet PU (Polyurethane)</option>
-                                    <option value="Isostatic Rubber">Isostatic Rubber</option>
-                                    <option value="Steel Matras (Baja)">Steel Matras (Baja)</option>
-                                    <option value="Mirror Chrome">Mirror Chrome</option>
-                                </select>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Lini Mesin</label>
+                                <input type="text" id="formLine" class="form-control form-control-sm" placeholder="Line 1">
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Mesin Press *</label>
-                                <input type="text" id="formLine" required class="form-control" placeholder="Misal Sacmi / DLT">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Lokasi Rak *</label>
-                                <input type="text" id="formRackLocation" required class="form-control" placeholder="Rak A-01">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Lokasi Rak</label>
+                                <input type="text" id="formRackLocation" class="form-control form-control-sm" placeholder="Rak A-01">
                             </div>
                         </div>
 
-                        <!-- Section Permukaan Matras -->
-                        <div class="card p-3 bg-slate-50 border rounded-3 mt-3">
-                            <label class="form-label fw-bold text-uppercase text-dark small mb-2">Tipe Permukaan Matras Punch *</label>
-                            <div class="d-flex gap-4 mb-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="surfaceCategory" id="surfPolos" value="Polos" checked onchange="toggleMotifInput()">
-                                    <label class="form-check-label fw-semibold" for="surfPolos">Polos (Flat)</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="surfaceCategory" id="surfMotif" value="Motif" onchange="toggleMotifInput()">
-                                    <label class="form-check-label fw-semibold" for="surfMotif">Bermotif (Relief)</label>
-                                </div>
+                        <div class="p-2 border rounded bg-light mt-3">
+                            <label class="form-label small fw-bold d-block mb-1">Rincian Stok Saat Ini (Pcs)</label>
+                            <div class="row g-2">
+                                <div class="col"><small class="text-success fw-bold d-block">Ready</small><input type="number" id="formReady" value="0" min="0" class="form-control form-control-sm"></div>
+                                <div class="col"><small class="text-primary fw-bold d-block">Pakai</small><input type="number" id="formTerpakai" value="0" min="0" class="form-control form-control-sm"></div>
+                                <div class="col"><small class="text-warning fw-bold d-block">Repair</small><input type="number" id="formRepair" value="0" min="0" class="form-control form-control-sm"></div>
+                                <div class="col"><small class="fw-bold d-block" style="color: #8b5cf6;">Servis Vendor</small><input type="number" id="formVendorService" value="0" min="0" class="form-control form-control-sm"></div>
+                                <div class="col"><small class="text-danger fw-bold d-block">Rusak</small><input type="number" id="formRusak" value="0" min="0" class="form-control form-control-sm"></div>
                             </div>
-                            <div id="motifContainer">
-                                <label class="form-label fw-bold text-uppercase text-secondary small mb-1">Nama / Kode Motif <span id="starMotif" class="text-danger d-none">*</span></label>
-                                <input type="text" id="formMotifName" disabled class="form-control" placeholder="e.g. Carrara White / Timber Wood">
-                            </div>
-                        </div>
-
-                        <!-- Ukuran & Spesifikasi -->
-                        <div class="row g-3 mt-1 bg-slate-50 p-2 rounded-3 border mx-0">
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-secondary small">Ukuran (cm) *</label>
-                                <input type="text" id="formSize" required class="form-control bg-white" placeholder="60x60">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-primary small">Tebal (mm) *</label>
-                                <input type="number" step="0.1" id="formThickness" required class="form-control bg-white fw-bold text-primary" placeholder="9.8">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold text-uppercase text-warning-emphasis small">SHG (%) *</label>
-                                <input type="number" step="0.01" id="formShg" required class="form-control bg-white fw-bold text-warning-emphasis" placeholder="7.20">
-                            </div>
-                        </div>
-
-                        <!-- Rincian Stok -->
-                        <div class="mt-3">
-                            <label class="form-label fw-bold text-uppercase text-secondary small mb-2">Rincian Stok Berdasarkan Kondisi (Qty)</label>
-                            <div class="row g-2 p-2 bg-slate-50 rounded-3 border mx-0">
-                                <div class="col-md-3">
-                                    <label class="form-label small text-success fw-bold mb-1">Ready</label>
-                                    <input type="number" id="formReady" min="0" value="0" required class="form-control form-control-sm">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small text-primary fw-bold mb-1">Terpakai</label>
-                                    <input type="number" id="formTerpakai" min="0" value="0" required class="form-control form-control-sm">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small text-warning-emphasis fw-bold mb-1">Repair</label>
-                                    <input type="number" id="formRepair" min="0" value="0" required class="form-control form-control-sm">
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label small text-danger fw-bold mb-1">Rusak</label>
-                                    <input type="number" id="formRusak" min="0" value="0" required class="form-control form-control-sm">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-3">
-                            <label class="form-label fw-bold text-uppercase text-secondary small">Min. Buffer Ready Stock *</label>
-                            <input type="number" id="formMinStock" min="1" value="2" required class="form-control">
                         </div>
 
                     </div>
-                    <div class="modal-footer bg-light px-4">
-                        <button type="button" class="btn btn-outline-secondary rounded-3" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning fw-bold px-4 rounded-3">Simpan Ke Cloud</button>
+                    <div class="modal-footer py-1">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning btn-sm fw-bold">Simpan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 1: Form Mutasi / Pindah Status Matras -->
+    <!-- Modal Mutasi Stok (Pindah Status / Kirim Servis) -->
     <div class="modal fade" id="mutationModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="modal-header bg-dark text-white px-4 py-3">
-                    <h6 class="modal-title fw-bold" id="mutationModalTitle"><i class="fa-solid fa-right-left me-2 text-warning"></i> Mutasi Pindah Matras</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white py-2">
+                    <h6 class="modal-title fw-bold"><i class="fa-solid fa-right-left text-warning me-2"></i> Mutasi & Kirim Servis Vendor</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form id="mutationForm" onsubmit="handleMutationSubmit(event)">
-                    <div class="modal-body p-4">
+                    <div class="modal-body p-3">
                         <input type="hidden" id="mutPunchId">
-                        
-                        <div class="alert alert-light border rounded-3 p-2.5 mb-3" id="mutPunchInfo"></div>
+                        <div class="alert alert-light border small p-2 mb-2" id="mutPunchInfo"></div>
 
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-8">
-                                <label class="form-label fw-bold small text-uppercase">Aktivitas Mutasi *</label>
-                                <select id="mutActionType" required class="form-select">
-                                    <option value="PASANG_MESIN">Pasang ke Mesin Press (Ready -> Terpakai)</option>
-                                    <option value="LEPAS_REPAIR">Lepas ke Bengkel Repair (Terpakai -> Repair)</option>
-                                    <option value="FINISH_REPAIR">Selesai Repair (Repair -> Ready)</option>
-                                    <option value="AFKIR_RUSAK">Dideklarasikan Rusak (Any -> Rusak)</option>
-                                </select>
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">Aktivitas Mutasi *</label>
+                            <select id="mutActionType" required class="form-select form-select-sm">
+                                <option value="PASANG_MESIN">1. Pasang ke Press (Ready -> Terpakai)</option>
+                                <option value="LEPAS_REPAIR">2. Lepas ke Repair Internal (Terpakai -> Repair)</option>
+                                <option value="KIRIM_VENDOR">3. Kirim Servis ke Vendor (Repair/Ready -> Servis Vendor)</option>
+                                <option value="KEMBALI_VENDOR">4. Selesai Servis Vendor (Servis Vendor -> Ready)</option>
+                                <option value="FINISH_REPAIR">5. Selesai Repair Internal (Repair -> Ready)</option>
+                                <option value="AFKIR_RUSAK">6. Deklarasi Rusak (Any -> Rusak)</option>
+                            </select>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Jumlah (Pcs) *</label>
+                                <input type="number" id="mutQty" min="1" value="1" required class="form-control form-control-sm">
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-bold small text-uppercase text-primary">Jumlah (Pcs) *</label>
-                                <input type="number" id="mutQty" min="1" value="1" required class="form-control fw-bold border-primary">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold">Nama Vendor / Bengkel</label>
+                                <input type="text" id="mutVendorName" class="form-control form-control-sm" placeholder="Isi jika kirim servis">
                             </div>
                         </div>
-
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-uppercase">Lini Mesin Target</label>
-                                <input type="text" id="mutLine" class="form-control" placeholder="e.g. SACMI Line 1">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small text-uppercase">Lokasi Rak Target</label>
-                                <input type="text" id="mutRack" class="form-control" placeholder="e.g. Rak A-02">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small text-uppercase">Catatan / Keterangan *</label>
-                            <textarea id="mutNotes" required class="form-control" rows="2" placeholder="e.g. Pasang untuk running motif Carrara"></textarea>
+                        <div class="mb-2">
+                            <label class="form-label small fw-bold">Catatan Mutasi / Surat Jalan *</label>
+                            <textarea id="mutNotes" required class="form-control form-control-sm" rows="2" placeholder="Contoh: Kirim relapping ke Vendor MDI (SJ-102)"></textarea>
                         </div>
                     </div>
-                    <div class="modal-footer bg-light px-4">
-                        <button type="button" class="btn btn-outline-secondary rounded-3 btn-sm" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning fw-bold px-4 rounded-3 btn-sm">Simpan Mutasi</button>
+                    <div class="modal-footer py-1">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning btn-sm fw-bold">Simpan Mutasi</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 2: Viewer Riwayat Log Mutasi Keluar-Masuk -->
+    <!-- Modal Riwayat Log -->
     <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="modal-header bg-dark text-white px-4 py-3">
-                    <h6 class="modal-title fw-bold" id="historyModalTitle"><i class="fa-solid fa-clock-rotate-left me-2 text-warning"></i> Log Riwayat Keluar-Masuk Matras</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white py-2">
+                    <h6 class="modal-title fw-bold" id="historyModalTitle">Riwayat Mutasi & Servis Vendor</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-hover border align-middle" style="font-size: 0.8rem;">
-                            <thead class="table-light fw-bold text-uppercase">
-                                <tr>
-                                    <th class="py-2 px-3">Waktu Log</th>
-                                    <th class="py-2 px-3">Aktivitas Mutasi</th>
-                                    <th class="py-2 px-3 text-center">Jumlah</th>
-                                    <th class="py-2 px-3">Lini / Rak</th>
-                                    <th class="py-2 px-3">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historyTableBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light px-4">
-                    <button type="button" class="btn btn-secondary rounded-3 btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
+                <div class="modal-body p-0">
+                    <table class="table table-sm mb-0 align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="p-2">Waktu</th>
+                                <th>Aktivitas</th>
+                                <th class="text-center">Qty</th>
+                                <th>Catatan / Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL 3: Cetak Label QR Code Ringkas -->
-    <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 shadow-lg rounded-4 text-center overflow-hidden">
-                <div class="modal-header bg-dark text-white py-2.5 px-3">
-                    <h6 class="modal-title fw-bold small"><i class="fa-solid fa-qrcode me-2 text-warning"></i> Label Tag Physical Punch</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4" id="printableQrArea">
-                    <div class="qr-label-card-simple text-center">
-                        <div id="qrContainer" class="d-flex justify-content-center p-2 bg-white mb-2"></div>
-                        <h5 id="qrPunchCode" class="fw-extrabold mb-1 text-dark">P6060-U01</h5>
-                        <div><span class="badge bg-dark text-warning px-3 py-1 fw-bold fs-6" id="qrTagPos">UPPER</span></div>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light p-2 justify-content-center">
-                    <button type="button" onclick="window.print()" class="btn btn-dark btn-sm fw-bold px-3"><i class="fa-solid fa-print me-1"></i> Cetak Label Tag</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwb0f3-feXFqQ0nkjwO6qKHQXXqQke5WikM5s4uiNSxqd1-WhKkEGGaYseOpWyYeq1w/exec";
 
         let punchInventory = [];
-        let punchModalBS = null;
-        let mutationModalBS = null;
-        let historyModalBS = null;
-        let qrModalBS = null;
+        let punchModalBS, mutationModalBS, historyModalBS;
 
         document.addEventListener('DOMContentLoaded', () => {
             punchModalBS = new bootstrap.Modal(document.getElementById('punchModal'));
             mutationModalBS = new bootstrap.Modal(document.getElementById('mutationModal'));
             historyModalBS = new bootstrap.Modal(document.getElementById('historyModal'));
-            qrModalBS = new bootstrap.Modal(document.getElementById('qrModal'));
-
-            document.addEventListener('keydown', (e) => {
-                if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
-                    e.preventDefault();
-                }
-            });
-
             fetchFromGoogleSheets();
         });
 
         function getProp(obj, prop) {
             if (!obj) return '';
-            if (obj[prop] !== undefined) return obj[prop];
-            const lowerProp = prop.toLowerCase();
-            for (let k in obj) {
-                if (k.toLowerCase() === lowerProp) return obj[k];
-            }
-            return '';
+            return obj[prop] !== undefined ? obj[prop] : (obj[prop.toLowerCase()] || '');
         }
 
         function fetchFromGoogleSheets() {
@@ -723,24 +308,18 @@
                 .then(res => {
                     document.getElementById('syncLoader').classList.add('d-none');
                     if(res.status === 'success') {
-                        punchInventory = res.data;
+                        punchInventory = res.data || [];
                         renderTable();
-                    } else {
-                        alert("Gagal membaca data Google Sheets!");
                     }
                 })
-                .catch(err => {
-                    document.getElementById('syncLoader').classList.add('d-none');
-                    console.error(err);
-                });
+                .catch(err => document.getElementById('syncLoader').classList.add('d-none'));
         }
 
         function postToGoogleSheets(actionType, payload, callback) {
-            const pin = prompt("Masukkan PIN Keamanan untuk Konfirmasi Akses Cloud:");
+            const pin = prompt("Masukkan PIN Keamanan:");
             if (!pin) return;
 
             document.getElementById('syncLoader').classList.remove('d-none');
-
             fetch(GAS_API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -754,304 +333,149 @@
                     fetchFromGoogleSheets();
                     if(callback) callback();
                 } else {
-                    alert("Akses Ditolak: " + res.message);
+                    alert("Gagal: " + res.message);
                 }
             })
-            .catch(err => {
-                document.getElementById('syncLoader').classList.add('d-none');
-                alert("Kesalahan koneksi jaringan!");
-            });
+            .catch(err => document.getElementById('syncLoader').classList.add('d-none'));
         }
 
         function resetAllFilters() {
             document.getElementById('searchInput').value = '';
+            document.getElementById('filterCondition').value = 'ALL';
             document.getElementById('filterType').value = 'ALL';
-            document.getElementById('filterSurface').value = 'ALL';
-            document.getElementById('filterCondition').value = 'ALL';
-            document.getElementById('filterAlert').value = 'ALL';
             renderTable();
         }
-
-        function showCriticalItemsOnly() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('filterType').value = 'ALL';
-            document.getElementById('filterSurface').value = 'ALL';
-            document.getElementById('filterCondition').value = 'ALL';
-            document.getElementById('filterAlert').value = 'LOW';
-            renderTable();
-        }
-
-        function toggleMotifInput() {
-            const surfaceCategoryEl = document.querySelector('input[name="surfaceCategory"]:checked');
-            const surfaceCategory = surfaceCategoryEl ? surfaceCategoryEl.value : 'Polos';
-
-            const motifInput = document.getElementById('formMotifName');
-            const star = document.getElementById('starMotif');
-
-            if (surfaceCategory === 'Motif') {
-                motifInput.disabled = false;
-                motifInput.required = true;
-                star.classList.remove('d-none');
-            } else {
-                motifInput.disabled = true;
-                motifInput.required = false;
-                motifInput.value = '';
-                star.classList.add('d-none');
-            }
-        }
-
-        function renderSizeDashboard() {
-    const sizeTbody = document.getElementById('sizeDashboardTable');
-    sizeTbody.innerHTML = '';
-
-    const sizeMap = {};
-    punchInventory.forEach(item => {
-        const sz = getProp(item, 'size') || 'Unspecified';
-        const surf = getProp(item, 'surfaceType') || 'Polos';
-        const vendor = getProp(item, 'vendor') || 'Tanpa Vendor';
-        
-        // Key unik berdasarkan Ukuran, Permukaan, dan Supplier
-        const key = `${sz}_${surf}_${vendor}`;
-
-        if (!sizeMap[key]) {
-            sizeMap[key] = { 
-                size: sz, 
-                surface: surf, 
-                vendor: vendor,
-                total: 0, ready: 0, terpakai: 0, repair: 0, rusak: 0, alertCount: 0 
-            };
-        }
-
-        const itemReady = Number(getProp(item, 'ready')) || 0;
-        const itemTerpakai = Number(getProp(item, 'terpakai')) || 0;
-        const itemRepair = Number(getProp(item, 'repair')) || 0;
-        const itemRusak = Number(getProp(item, 'rusak')) || 0;
-        const itemMinStock = Number(getProp(item, 'minStock')) || 0;
-
-        const totalUnit = itemReady + itemTerpakai + itemRepair + itemRusak;
-        sizeMap[key].total += totalUnit;
-        sizeMap[key].ready += itemReady;
-        sizeMap[key].terpakai += itemTerpakai;
-        sizeMap[key].repair += itemRepair;
-        sizeMap[key].rusak += itemRusak;
-        
-        if (itemReady < itemMinStock) {
-            sizeMap[key].alertCount += 1;
-        }
-    });
-
-    Object.values(sizeMap).forEach(s => {
-        const tr = document.createElement('tr');
-        tr.style.cursor = 'pointer';
-        
-        // Klik baris otomatis memfilter Ukuran, Permukaan, dan kata kunci Supplier
-        tr.onclick = () => {
-            document.getElementById('searchInput').value = s.vendor === 'Tanpa Vendor' ? s.size : `${s.size} ${s.vendor}`;
-            document.getElementById('filterSurface').value = s.surface;
-            document.getElementById('filterCondition').value = 'ALL';
-            document.getElementById('filterAlert').value = 'ALL'; 
-            renderTable();
-        };
-
-        let surfaceBadge = s.surface === 'Motif' 
-            ? `<span class="badge bg-primary-subtle text-primary border border-primary-subtle"><i class="fa-solid fa-layer-group me-1"></i> Motif</span>`
-            : `<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Polos</span>`;
-
-        let vendorBadge = `<span class="badge bg-light text-dark border fw-bold px-2 py-1">${s.vendor}</span>`;
-
-        tr.innerHTML = `
-            <td class="px-3 py-2 fw-bold text-nowrap">${s.size} cm</td>
-            <td class="px-3 py-2 text-nowrap">${surfaceBadge}</td>
-            <td class="px-3 py-2 text-nowrap">${vendorBadge}</td>
-            <td class="px-3 py-2 text-center fw-bold text-nowrap">${s.total}</td>
-            <td class="px-3 py-2 text-center fw-bold text-success text-nowrap">${s.ready}</td>
-            <td class="px-3 py-2 text-center fw-bold text-primary text-nowrap">${s.terpakai}</td>
-            <td class="px-3 py-2 text-center fw-bold text-warning-emphasis text-nowrap">${s.repair}</td>
-            <td class="px-3 py-2 text-center fw-bold text-danger text-nowrap">${s.rusak}</td>
-            <td class="px-3 py-2 text-center text-nowrap">
-                ${s.alertCount > 0 
-                    ? `<span class="badge bg-danger text-white rounded-pill"><i class="fa-solid fa-triangle-exclamation me-1"></i> ${s.alertCount} Restock</span>` 
-                    : `<span class="badge bg-success text-white rounded-pill"><i class="fa-solid fa-check me-1"></i> Aman</span>`
-                }
-            </td>
-        `;
-        sizeTbody.appendChild(tr);
-    });
-}
 
         function renderTable() {
-            renderSizeDashboard();
-
             const tbody = document.getElementById('punchTableBody');
-            const emptyState = document.getElementById('emptyState');
-
             const search = document.getElementById('searchInput').value.toLowerCase().trim();
-            const surfaceFilter = document.getElementById('filterSurface').value;
-            const typeFilter = document.getElementById('filterType').value;
             const conditionFilter = document.getElementById('filterCondition').value;
-            const alertFilter = document.getElementById('filterAlert').value;
+            const typeFilter = document.getElementById('filterType').value;
 
             tbody.innerHTML = '';
-            let total = 0, ready = 0, terpakai = 0, repair = 0, rusak = 0;
-            let criticalItems = [];
+            let total = 0, ready = 0, terpakai = 0, repair = 0, vendor = 0, rusak = 0;
 
             const filteredData = punchInventory.filter(item => {
-                const itemCode = getProp(item, 'code');
-                const itemSerial = getProp(item, 'serialNo');
+                const code = getProp(item, 'code');
                 const itemVendor = getProp(item, 'vendor');
-                const itemType = getProp(item, 'type');
-                const itemSurface = getProp(item, 'surfaceType');
-                const itemMotif = getProp(item, 'motifName');
-                const itemSize = getProp(item, 'size');
-                const itemLine = getProp(item, 'line');
-                const itemRack = getProp(item, 'rackLocation');
+                const type = getProp(item, 'type');
+                const size = getProp(item, 'size');
 
-                const itemReady = Number(getProp(item, 'ready')) || 0;
-                const itemTerpakai = Number(getProp(item, 'terpakai')) || 0;
-                const itemRepair = Number(getProp(item, 'repair')) || 0;
-                const itemRusak = Number(getProp(item, 'rusak')) || 0;
-                const itemMinStock = Number(getProp(item, 'minStock')) || 0;
+                const r = Number(getProp(item, 'ready')) || 0;
+                const t = Number(getProp(item, 'terpakai')) || 0;
+                const rp = Number(getProp(item, 'repair')) || 0;
+                const v = Number(getProp(item, 'vendorService')) || 0;
+                const rsk = Number(getProp(item, 'rusak')) || 0;
 
-                ready += itemReady;
-                terpakai += itemTerpakai;
-                repair += itemRepair;
-                rusak += itemRusak;
+                ready += r; terpakai += t; repair += rp; vendor += v; rusak += rsk;
 
-                if (itemReady < itemMinStock) {
-                    criticalItems.push(`${itemCode} (${itemSize})`);
-                }
-
-                const matchSearch = !search || [
-                    itemCode, itemSerial, itemVendor, itemSize, 
-                    itemMotif, itemRack, itemLine
-                ].some(val => val && val.toString().toLowerCase().includes(search));
-                
-                const matchSurface = surfaceFilter === 'ALL' || itemSurface === surfaceFilter;
-                const matchType = typeFilter === 'ALL' || itemType === typeFilter;
+                const matchSearch = !search || [code, itemVendor, size, getProp(item, 'rackLocation')].some(val => val.toString().toLowerCase().includes(search));
+                const matchType = typeFilter === 'ALL' || type === typeFilter;
                 
                 let matchCondition = true;
-                if (conditionFilter === 'Ready') matchCondition = itemReady > 0;
-                if (conditionFilter === 'Terpakai') matchCondition = itemTerpakai > 0;
-                if (conditionFilter === 'Repair') matchCondition = itemRepair > 0;
-                if (conditionFilter === 'Rusak') matchCondition = itemRusak > 0;
+                if (conditionFilter === 'Ready') matchCondition = r > 0;
+                if (conditionFilter === 'Terpakai') matchCondition = t > 0;
+                if (conditionFilter === 'Repair') matchCondition = rp > 0;
+                if (conditionFilter === 'Vendor') matchCondition = v > 0;
+                if (conditionFilter === 'Rusak') matchCondition = rsk > 0;
 
-                let matchAlert = true;
-                if (alertFilter === 'LOW') matchAlert = itemReady < itemMinStock;
-
-                return matchSearch && matchSurface && matchType && matchCondition && matchAlert;
+                return matchSearch && matchType && matchCondition;
             });
 
-            total = ready + terpakai + repair + rusak;
-            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-total').innerText = ready + terpakai + repair + vendor + rusak;
             document.getElementById('stat-ready').innerText = ready;
             document.getElementById('stat-terpakai').innerText = terpakai;
             document.getElementById('stat-repair').innerText = repair;
+            document.getElementById('stat-vendor').innerText = vendor;
             document.getElementById('stat-rusak').innerText = rusak;
 
-            const alertBanner = document.getElementById('alertBanner');
-            if (criticalItems.length > 0) {
-                alertBanner.classList.remove('d-none');
-                document.getElementById('alertBannerText').innerHTML = `Terdapat <strong>${criticalItems.length} matras</strong> di bawah buffer minimum: ${criticalItems.join(', ')}.`;
-            } else {
-                alertBanner.classList.add('d-none');
-            }
-
-            if (filteredData.length === 0) {
-                emptyState.classList.remove('d-none');
-                return;
-            } else {
-                emptyState.classList.add('d-none');
-            }
-
             filteredData.forEach(item => {
-                const itemId = getProp(item, 'id') || getProp(item, 'ID');
-                const itemCode = getProp(item, 'code');
-                const itemSerial = getProp(item, 'serialNo');
-                const itemVendor = getProp(item, 'vendor');
-                const itemType = getProp(item, 'type');
-                const itemCavity = getProp(item, 'cavity');
-                const itemProcess = getProp(item, 'processType');
-                const itemCoating = getProp(item, 'coating');
-                const itemSurface = getProp(item, 'surfaceType');
-                const itemMotif = getProp(item, 'motifName');
-                const itemSize = getProp(item, 'size');
-                const itemThickness = Number(getProp(item, 'thickness')) || 0;
-                const itemShg = Number(getProp(item, 'shg')) || 0;
-                const itemLine = getProp(item, 'line');
-                const itemRack = getProp(item, 'rackLocation');
-
-                const itemReady = Number(getProp(item, 'ready')) || 0;
-                const itemTerpakai = Number(getProp(item, 'terpakai')) || 0;
-                const itemRepair = Number(getProp(item, 'repair')) || 0;
-                const itemRusak = Number(getProp(item, 'rusak')) || 0;
-                const itemMinStock = Number(getProp(item, 'minStock')) || 0;
-
-                const totalStock = itemReady + itemTerpakai + itemRepair + itemRusak;
-                
-                let notifBadge = itemReady === 0
-                    ? `<span class="badge bg-danger text-white rounded-pill px-2.5 py-1">KOSONG</span>`
-                    : (itemReady < itemMinStock
-                        ? `<span class="badge bg-warning text-dark rounded-pill px-2.5 py-1">LOW (${itemReady}/${itemMinStock})</span>`
-                        : `<span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1">AMAN (${itemReady})</span>`);
+                const id = getProp(item, 'id') || getProp(item, 'ID');
+                const r = Number(getProp(item, 'ready')) || 0;
+                const t = Number(getProp(item, 'terpakai')) || 0;
+                const rp = Number(getProp(item, 'repair')) || 0;
+                const v = Number(getProp(item, 'vendorService')) || 0;
+                const rsk = Number(getProp(item, 'rusak')) || 0;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="py-2.5 px-3 fw-bold text-dark">${itemCode}<small class="d-block text-muted fw-normal">${itemSerial || '-'}</small></td>
-                    <td class="py-2.5 px-3 fw-semibold text-primary"><span class="badge bg-primary-subtle text-primary border border-primary-subtle">${itemVendor || '-'}</span></td>
-                    <td class="py-2.5 px-3"><span class="badge ${itemType === 'UPPER' ? 'badge-upper' : 'badge-lower'}">${itemType}</span><small class="d-block text-muted mt-0.5" style="font-size:0.7rem;">${itemCavity || '1 Cavity'}</small></td>
-                    <td class="py-2.5 px-3"><span class="badge bg-light text-dark border">${itemProcess || 'Basic'}</span></td>
-                    <td class="py-2.5 px-3 fw-semibold">${itemSize} <span class="text-primary small">(${itemThickness.toFixed(1)}mm)</span></td>
-                    <td class="py-2.5 px-3 text-center"><span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">${itemShg.toFixed(2)}%</span></td>
-                    <td class="py-2.5 px-3 small text-muted">${itemCoating || '-'}</td>
-                    <td class="py-2.5 px-3">${itemSurface === 'Motif' ? `<span class="badge bg-primary-subtle text-primary border border-primary-subtle mb-0.5">Motif</span><small class="d-block text-muted">${itemMotif}</small>` : `<span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Polos</span>`}</td>
-                    <td class="py-2.5 px-3 small"><div class="fw-semibold text-dark">${itemLine}</div><div class="text-warning-emphasis fw-bold"><i class="fa-solid fa-location-dot me-1"></i> ${itemRack || '-'}</div></td>
-                    <td class="py-2.5 px-3 text-center">
-                        <div class="d-flex flex-wrap gap-1 justify-content-center">
-                            <span class="badge bg-success-subtle text-success">${itemReady} Rdy</span>
-                            <span class="badge bg-primary-subtle text-primary">${itemTerpakai} Pakai</span>
-                            <span class="badge bg-warning-subtle text-warning-emphasis">${itemRepair} Rpr</span>
-                            <span class="badge bg-danger-subtle text-danger">${itemRusak} Rsk</span>
-                        </div>
+                    <td class="px-3 fw-bold">${getProp(item, 'code')}</td>
+                    <td><span class="badge bg-light text-dark border">${getProp(item, 'vendor')}</span></td>
+                    <td><span class="badge ${getProp(item, 'type') === 'UPPER' ? 'bg-secondary' : 'bg-info'}">${getProp(item, 'type')}</span></td>
+                    <td>${getProp(item, 'size')} cm</td>
+                    <td><small>${getProp(item, 'line') || '-'}</small> / <small class="fw-bold text-warning-emphasis">${getProp(item, 'rackLocation') || '-'}</small></td>
+                    <td class="text-center">
+                        <span class="badge bg-success-subtle text-success">${r} Rdy</span>
+                        <span class="badge bg-primary-subtle text-primary">${t} Pakai</span>
+                        <span class="badge bg-warning-subtle text-warning">${rp} Rpr Int</span>
+                        <span class="badge bg-purple-subtle text-purple" style="background:#f3e8ff; color:#7e22ce;">${v} Servis Vendor</span>
+                        <span class="badge bg-danger-subtle text-danger">${rsk} Rsk</span>
                     </td>
-                    <td class="py-2.5 px-3 text-center fw-extrabold fs-6">${totalStock}</td>
-                    <td class="py-2.5 px-3 text-center">${notifBadge}</td>
-                    <td class="py-2.5 px-3 text-center text-nowrap">
-                        <div class="btn-group btn-group-sm mb-1">
-                            <button onclick="openMutationModal('${itemId}')" class="btn btn-sm btn-outline-primary" title="Mutasi"><i class="fa-solid fa-right-left"></i> Mutasi</button>
-                            <button onclick="openHistoryModal('${itemId}')" class="btn btn-sm btn-outline-info" title="Log"><i class="fa-solid fa-clock-rotate-left"></i> Log</button>
-                            <button onclick="openQrModal('${itemId}')" class="btn btn-sm btn-outline-dark" title="Cetak QR"><i class="fa-solid fa-qrcode"></i> Label</button>
-                        </div>
-                        <div class="btn-group btn-group-sm">
-                            <button onclick="openModal('edit', '${itemId}')" class="btn btn-outline-warning rounded-2 me-1" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button onclick="deleteItem('${itemId}')" class="btn btn-outline-danger rounded-2" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                        </div>
+                    <td class="text-center fw-bold">${r + t + rp + v + rsk}</td>
+                    <td class="text-center">
+                        <button onclick="openMutationModal('${id}')" class="btn btn-sm btn-outline-primary" title="Mutasi / Servis Vendor"><i class="fa-solid fa-right-left"></i> Mutasi</button>
+                        <button onclick="openHistoryModal('${id}')" class="btn btn-sm btn-outline-info" title="Log"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                        <button onclick="openModal('edit', '${id}')" class="btn btn-sm btn-outline-warning" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteItem('${id}')" class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
+        function openModal(mode, id = null) {
+            const form = document.getElementById('punchForm');
+            form.reset();
+            if (mode === 'edit') {
+                const item = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == id);
+                if (item) {
+                    document.getElementById('punchId').value = id;
+                    document.getElementById('formCode').value = getProp(item, 'code');
+                    document.getElementById('formVendor').value = getProp(item, 'vendor');
+                    document.getElementById('formType').value = getProp(item, 'type');
+                    document.getElementById('formSize').value = getProp(item, 'size');
+                    document.getElementById('formLine').value = getProp(item, 'line');
+                    document.getElementById('formRackLocation').value = getProp(item, 'rackLocation');
+                    document.getElementById('formReady').value = getProp(item, 'ready');
+                    document.getElementById('formTerpakai').value = getProp(item, 'terpakai');
+                    document.getElementById('formRepair').value = getProp(item, 'repair');
+                    document.getElementById('formVendorService').value = getProp(item, 'vendorService') || 0;
+                    document.getElementById('formRusak').value = getProp(item, 'rusak');
+                }
+            } else {
+                document.getElementById('punchId').value = '';
+            }
+            punchModalBS.show();
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('punchId').value;
+            const payload = {
+                id: id || 'PUNCH_' + Date.now(),
+                code: document.getElementById('formCode').value.trim(),
+                vendor: document.getElementById('formVendor').value.trim(),
+                type: document.getElementById('formType').value,
+                size: document.getElementById('formSize').value.trim(),
+                line: document.getElementById('formLine').value.trim(),
+                rackLocation: document.getElementById('formRackLocation').value.trim(),
+                ready: Number(document.getElementById('formReady').value) || 0,
+                terpakai: Number(document.getElementById('formTerpakai').value) || 0,
+                repair: Number(document.getElementById('formRepair').value) || 0,
+                vendorService: Number(document.getElementById('formVendorService').value) || 0,
+                rusak: Number(document.getElementById('formRusak').value) || 0
+            };
+            postToGoogleSheets("save", payload, () => punchModalBS.hide());
+        }
+
         function openMutationModal(id) {
             const item = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == id);
             if (!item) return;
 
-            const itemId = getProp(item, 'id') || getProp(item, 'ID');
-            const itemCode = getProp(item, 'code');
-            const itemSize = getProp(item, 'size');
-            const itemType = getProp(item, 'type');
-            const itemReady = Number(getProp(item, 'ready')) || 0;
-            const itemTerpakai = Number(getProp(item, 'terpakai')) || 0;
-            const itemRepair = Number(getProp(item, 'repair')) || 0;
-
-            document.getElementById('mutPunchId').value = itemId;
-            document.getElementById('mutLine').value = getProp(item, 'line') || '';
-            document.getElementById('mutRack').value = getProp(item, 'rackLocation') || '';
-            document.getElementById('mutQty').value = 1;
+            document.getElementById('mutPunchId').value = id;
             document.getElementById('mutNotes').value = '';
-
             document.getElementById('mutPunchInfo').innerHTML = `
-                <div class="fw-bold text-dark">${itemCode} (${itemSize} - ${itemType})</div>
-                <div class="small text-muted">Stok Tersedia: Ready: <strong>${itemReady}</strong> | Terpakai: <strong>${itemTerpakai}</strong> | Repair: <strong>${itemRepair}</strong></div>
+                <strong>${getProp(item, 'code')}</strong> | Ready: ${getProp(item, 'ready')} | Repair Int: ${getProp(item, 'repair')} | Servis Vendor: <strong>${getProp(item, 'vendorService') || 0}</strong>
             `;
             mutationModalBS.show();
         }
@@ -1061,66 +485,53 @@
             const id = document.getElementById('mutPunchId').value;
             const action = document.getElementById('mutActionType').value;
             const qty = Number(document.getElementById('mutQty').value) || 1;
-            const line = document.getElementById('mutLine').value.trim();
-            const rack = document.getElementById('mutRack').value.trim();
-            const notes = document.getElementById('mutNotes').value.trim();
+            const vendorName = document.getElementById('mutVendorName').value;
+            const notes = document.getElementById('mutNotes').value;
 
             const item = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == id);
             if (!item) return;
 
-            const now = new Date();
-            const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-            let actionText = '';
             let ready = Number(getProp(item, 'ready')) || 0;
             let terpakai = Number(getProp(item, 'terpakai')) || 0;
             let repair = Number(getProp(item, 'repair')) || 0;
+            let vendorService = Number(getProp(item, 'vendorService')) || 0;
             let rusak = Number(getProp(item, 'rusak')) || 0;
 
             if (action === 'PASANG_MESIN') {
-                if (ready >= qty) { ready -= qty; terpakai += qty; actionText = 'Pasang ke Press (Ready -> Terpakai)'; }
-                else { alert(`Stok Ready tidak cukup! (${ready} pcs)`); return; }
+                if (ready < qty) return alert("Stok Ready kurang!");
+                ready -= qty; terpakai += qty;
             } else if (action === 'LEPAS_REPAIR') {
-                if (terpakai >= qty) { terpakai -= qty; repair += qty; actionText = 'Lepas ke Repair (Terpakai -> Repair)'; }
-                else { alert(`Stok Terpakai tidak cukup! (${terpakai} pcs)`); return; }
+                if (terpakai < qty) return alert("Stok Terpakai kurang!");
+                terpakai -= qty; repair += qty;
+            } else if (action === 'KIRIM_VENDOR') {
+                if (repair >= qty) repair -= qty;
+                else if (ready >= qty) ready -= qty;
+                else return alert("Stok Repair / Ready tidak cukup untuk dikirim ke vendor!");
+                vendorService += qty;
+            } else if (action === 'KEMBALI_VENDOR') {
+                if (vendorService < qty) return alert("Jumlah melebihi stok yang sedang servis di vendor!");
+                vendorService -= qty; ready += qty;
             } else if (action === 'FINISH_REPAIR') {
-                if (repair >= qty) { repair -= qty; ready += qty; actionText = 'Selesai Repair (Repair -> Ready)'; }
-                else { alert(`Stok Repair tidak cukup! (${repair} pcs)`); return; }
+                if (repair < qty) return alert("Stok Repair internal kurang!");
+                repair -= qty; ready += qty;
             } else if (action === 'AFKIR_RUSAK') {
                 if (ready >= qty) ready -= qty;
                 else if (repair >= qty) repair -= qty;
-                else if (terpakai >= qty) terpakai -= qty;
-                else { alert('Jumlah afkir melebihi stok!'); return; }
-                rusak += qty; actionText = 'Matras Rusak / Afkir';
+                else return alert("Stok tidak cukup!");
+                rusak += qty;
             }
 
+            const now = new Date();
+            const timeStr = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
             let historyList = item.history || [];
-            historyList.unshift({ time: timeStr, action: actionText, qty: qty, line: `${line || '-'} / ${rack || '-'}`, notes: notes });
+            historyList.unshift({
+                time: timeStr,
+                action: action + (vendorName ? ` (${vendorName})` : ''),
+                qty: qty,
+                notes: notes
+            });
 
-            const payload = {
-                id: getProp(item, 'id') || getProp(item, 'ID'),
-                code: getProp(item, 'code'),
-                serialNo: getProp(item, 'serialNo'),
-                vendor: getProp(item, 'vendor'),
-                type: getProp(item, 'type'),
-                cavity: getProp(item, 'cavity'),
-                processType: getProp(item, 'processType'),
-                coating: getProp(item, 'coating'),
-                surfaceType: getProp(item, 'surfaceType'),
-                motifName: getProp(item, 'motifName'),
-                size: getProp(item, 'size'),
-                thickness: getProp(item, 'thickness'),
-                shg: getProp(item, 'shg'),
-                line: line || getProp(item, 'line'),
-                rackLocation: rack || getProp(item, 'rackLocation'),
-                ready: ready,
-                terpakai: terpakai,
-                repair: repair,
-                rusak: rusak,
-                minStock: getProp(item, 'minStock'),
-                history: historyList
-            };
-
+            const payload = { ...item, ready, terpakai, repair, vendorService, rusak, history: historyList };
             postToGoogleSheets("save", payload, () => mutationModalBS.hide());
         }
 
@@ -1128,23 +539,21 @@
             const item = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == id);
             if (!item) return;
 
-            const itemCode = getProp(item, 'code');
-            document.getElementById('historyModalTitle').innerHTML = `<i class="fa-solid fa-clock-rotate-left me-2 text-warning"></i> Log Mutasi: ${itemCode}`;
+            document.getElementById('historyModalTitle').innerText = `Log Mutasi: ${getProp(item, 'code')}`;
             const tbody = document.getElementById('historyTableBody');
             tbody.innerHTML = '';
 
             const logs = item.history || [];
             if (logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Belum ada riwayat mutasi.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-3 text-muted">Belum ada riwayat mutasi.</td></tr>`;
             } else {
                 logs.forEach(log => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="py-2 px-3 fw-semibold text-nowrap">${log.time}</td>
-                        <td class="py-2 px-3 text-nowrap"><span class="badge bg-primary-subtle text-primary border border-primary-subtle">${log.action}</span></td>
-                        <td class="py-2 px-3 text-center fw-bold text-nowrap">${log.qty || 1} pcs</td>
-                        <td class="py-2 px-3 text-nowrap">${log.line}</td>
-                        <td class="py-2 px-3 text-muted">${log.notes}</td>
+                        <td class="p-2">${log.time}</td>
+                        <td><span class="badge bg-primary-subtle text-primary">${log.action}</span></td>
+                        <td class="text-center fw-bold">${log.qty || 1} Pcs</td>
+                        <td class="text-muted">${log.notes}</td>
                     `;
                     tbody.appendChild(tr);
                 });
@@ -1152,130 +561,10 @@
             historyModalBS.show();
         }
 
-        function openQrModal(id) {
-            const item = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == id);
-            if (!item) return;
-
-            const itemCode = getProp(item, 'code');
-            const itemType = getProp(item, 'type');
-
-            const qrContainer = document.getElementById('qrContainer');
-            qrContainer.innerHTML = '';
-            document.getElementById('qrPunchCode').innerText = itemCode;
-            document.getElementById('qrTagPos').innerText = itemType;
-
-            new QRCode(qrContainer, {
-                text: `PUNCH:${itemCode}|TYPE:${itemType}`,
-                width: 140, height: 140,
-                colorDark : "#0f172a", colorLight : "#ffffff"
-            });
-            qrModalBS.show();
-        }
-
         function deleteItem(id) {
-            if(confirm("Apakah Anda yakin ingin menghapus data matras ini?")) {
+            if (confirm("Yakin ingin menghapus data matras ini?")) {
                 postToGoogleSheets("delete", { id: id });
             }
-        }
-
-        function openModal(mode, id = null) {
-            const form = document.getElementById('punchForm');
-            if (mode === 'add') {
-                form.reset();
-                document.getElementById('punchId').value = '';
-                document.getElementById('surfPolos').checked = true;
-                toggleMotifInput();
-            } else if (mode === 'edit') {
-                const item = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == id);
-                if (item) {
-                    document.getElementById('punchId').value = getProp(item, 'id') || getProp(item, 'ID');
-                    document.getElementById('formCode').value = getProp(item, 'code');
-                    document.getElementById('formSerialNo').value = getProp(item, 'serialNo') || '';
-                    document.getElementById('formVendor').value = getProp(item, 'vendor') || '';
-                    document.getElementById('formType').value = getProp(item, 'type');
-                    document.getElementById('formCavity').value = getProp(item, 'cavity') || '1 Cavity';
-                    document.getElementById('formProcessType').value = getProp(item, 'processType') || 'Basic / Standart';
-                    document.getElementById('formCoating').value = getProp(item, 'coating') || 'Karet PU (Polyurethane)';
-                    document.getElementById('formSize').value = getProp(item, 'size');
-                    document.getElementById('formThickness').value = getProp(item, 'thickness') || '';
-                    document.getElementById('formShg').value = getProp(item, 'shg') || '';
-                    document.getElementById('formLine').value = getProp(item, 'line');
-                    document.getElementById('formRackLocation').value = getProp(item, 'rackLocation') || '';
-                    
-                    const surfType = getProp(item, 'surfaceType');
-                    if (surfType === 'Motif') {
-                        document.getElementById('surfMotif').checked = true;
-                        toggleMotifInput();
-                        document.getElementById('formMotifName').value = getProp(item, 'motifName') || '';
-                    } else {
-                        document.getElementById('surfPolos').checked = true;
-                        toggleMotifInput();
-                    }
-
-                    document.getElementById('formReady').value = getProp(item, 'ready');
-                    document.getElementById('formTerpakai').value = getProp(item, 'terpakai');
-                    document.getElementById('formRepair').value = getProp(item, 'repair');
-                    document.getElementById('formRusak').value = getProp(item, 'rusak');
-                    document.getElementById('formMinStock').value = getProp(item, 'minStock');
-                }
-            }
-            punchModalBS.show();
-        }
-
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            
-            const existingId = document.getElementById('punchId').value;
-            const id = existingId || Date.now();
-            const now = new Date();
-            const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-            const surfaceCategoryEl = document.querySelector('input[name="surfaceCategory"]:checked');
-            const surfaceType = surfaceCategoryEl ? surfaceCategoryEl.value : 'Polos';
-            const motifName = (surfaceType === 'Motif') ? document.getElementById('formMotifName').value : '-';
-
-            // Ambil history lama agar riwayat mutasi tidak hilang saat edit
-            let existingHistory = [];
-            if (existingId) {
-                const currentItem = punchInventory.find(p => (getProp(p, 'id') || getProp(p, 'ID')) == existingId);
-                if (currentItem && currentItem.history) {
-                    existingHistory = currentItem.history;
-                }
-            }
-
-            const newLog = { 
-                time: timeStr, 
-                action: existingId ? 'Update Master Data' : 'Inisialisasi Master Data', 
-                qty: 1, 
-                line: `${document.getElementById('formLine').value} / ${document.getElementById('formRackLocation').value}`, 
-                notes: 'Data diperbarui via form master' 
-            };
-
-            const payload = {
-                id: id,
-                code: document.getElementById('formCode').value.toUpperCase().trim(),
-                serialNo: document.getElementById('formSerialNo').value.toUpperCase().trim(),
-                vendor: document.getElementById('formVendor').value.trim(),
-                type: document.getElementById('formType').value,
-                cavity: document.getElementById('formCavity').value,
-                processType: document.getElementById('formProcessType').value,
-                coating: document.getElementById('formCoating').value,
-                surfaceType: surfaceType,
-                motifName: motifName,
-                size: document.getElementById('formSize').value.trim(),
-                thickness: parseFloat(document.getElementById('formThickness').value) || 0,
-                shg: parseFloat(document.getElementById('formShg').value) || 0,
-                line: document.getElementById('formLine').value.trim(),
-                rackLocation: document.getElementById('formRackLocation').value.trim(),
-                ready: Number(document.getElementById('formReady').value),
-                terpakai: Number(document.getElementById('formTerpakai').value),
-                repair: Number(document.getElementById('formRepair').value),
-                rusak: Number(document.getElementById('formRusak').value),
-                minStock: Number(document.getElementById('formMinStock').value),
-                history: [newLog, ...existingHistory]
-            };
-
-            postToGoogleSheets("save", payload, () => punchModalBS.hide());
         }
     </script>
 </body>
