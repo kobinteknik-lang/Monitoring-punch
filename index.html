@@ -90,7 +90,7 @@
             <div class="card-body p-2">
                 <div class="row g-2">
                     <div class="col-md-4">
-                        <input type="text" id="searchInput" oninput="renderTable()" class="form-control form-control-sm" placeholder="Cari Kode, Vendor, Ukuran, Rak...">
+                        <input type="text" id="searchInput" oninput="renderTable()" class="form-control form-control-sm" placeholder="Cari Kode, Vendor, Ukuran, Tebal, Rak...">
                     </div>
                     <div class="col-md-3">
                         <select id="filterCondition" onchange="renderTable()" class="form-select form-select-sm">
@@ -126,6 +126,7 @@
                             <th>Vendor</th>
                             <th>Posisi</th>
                             <th>Ukuran</th>
+                            <th>Tebal (Thickness)</th>
                             <th>Lokasi / Lini</th>
                             <th class="text-center">Rincian Stok (Pcs)</th>
                             <th class="text-center">Total</th>
@@ -139,7 +140,7 @@
 
     </main>
 
-    <!-- Form Input Sederhana -->
+    <!-- Form Input Data -->
     <div class="modal fade" id="punchModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -163,16 +164,20 @@
                         </div>
 
                         <div class="row g-2 mb-2">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label class="form-label small fw-bold">Posisi *</label>
                                 <select id="formType" class="form-select form-select-sm">
                                     <option value="UPPER">UPPER (Atas)</option>
                                     <option value="LOWER">LOWER (Bawah)</option>
                                 </select>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
                                 <label class="form-label small fw-bold">Ukuran (cm) *</label>
                                 <input type="text" id="formSize" required class="form-control form-control-sm" placeholder="Contoh: 60x60">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small fw-bold">Tebal (mm)</label>
+                                <input type="text" id="formThickness" class="form-control form-control-sm" placeholder="Contoh: 12">
                             </div>
                         </div>
 
@@ -208,7 +213,7 @@
         </div>
     </div>
 
-    <!-- Modal Mutasi Stok (Pindah Status / Kirim Servis) -->
+    <!-- Modal Mutasi Stok -->
     <div class="modal fade" id="mutationModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -360,6 +365,7 @@
                 const itemVendor = getProp(item, 'vendor');
                 const type = getProp(item, 'type');
                 const size = getProp(item, 'size');
+                const thickness = getProp(item, 'thickness');
 
                 const r = Number(getProp(item, 'ready')) || 0;
                 const t = Number(getProp(item, 'terpakai')) || 0;
@@ -369,7 +375,7 @@
 
                 ready += r; terpakai += t; repair += rp; vendor += v; rusak += rsk;
 
-                const matchSearch = !search || [code, itemVendor, size, getProp(item, 'rackLocation')].some(val => val.toString().toLowerCase().includes(search));
+                const matchSearch = !search || [code, itemVendor, size, thickness, getProp(item, 'rackLocation')].some(val => val.toString().toLowerCase().includes(search));
                 const matchType = typeFilter === 'ALL' || type === typeFilter;
                 
                 let matchCondition = true;
@@ -403,6 +409,7 @@
                     <td><span class="badge bg-light text-dark border">${getProp(item, 'vendor')}</span></td>
                     <td><span class="badge ${getProp(item, 'type') === 'UPPER' ? 'bg-secondary' : 'bg-info'}">${getProp(item, 'type')}</span></td>
                     <td>${getProp(item, 'size')} cm</td>
+                    <td>${getProp(item, 'thickness') ? getProp(item, 'thickness') + ' mm' : '-'}</td>
                     <td><small>${getProp(item, 'line') || '-'}</small> / <small class="fw-bold text-warning-emphasis">${getProp(item, 'rackLocation') || '-'}</small></td>
                     <td class="text-center">
                         <span class="badge bg-success-subtle text-success">${r} Rdy</span>
@@ -434,6 +441,7 @@
                     document.getElementById('formVendor').value = getProp(item, 'vendor');
                     document.getElementById('formType').value = getProp(item, 'type');
                     document.getElementById('formSize').value = getProp(item, 'size');
+                    document.getElementById('formThickness').value = getProp(item, 'thickness');
                     document.getElementById('formLine').value = getProp(item, 'line');
                     document.getElementById('formRackLocation').value = getProp(item, 'rackLocation');
                     document.getElementById('formReady').value = getProp(item, 'ready');
@@ -457,6 +465,7 @@
                 vendor: document.getElementById('formVendor').value.trim(),
                 type: document.getElementById('formType').value,
                 size: document.getElementById('formSize').value.trim(),
+                thickness: document.getElementById('formThickness').value.trim(),
                 line: document.getElementById('formLine').value.trim(),
                 rackLocation: document.getElementById('formRackLocation').value.trim(),
                 ready: Number(document.getElementById('formReady').value) || 0,
