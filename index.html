@@ -177,7 +177,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 rounded text-white" id="nav-form" href="#" onclick="switchPage('form')">
+                        <a class="nav-link px-3 rounded text-white" id="nav-form" href="#" onclick="resetAndOpenForm()">
                             <i class="bi bi-plus-circle-fill me-1 text-warning"></i> Input Punch Baru
                         </a>
                     </li>
@@ -242,7 +242,7 @@
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
                             <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Cari merk, kode, size..." onkeyup="filterTable()">
                         </div>
-                        <button class="btn btn-primary btn-sm text-nowrap" onclick="switchPage('form')">
+                        <button class="btn btn-primary btn-sm text-nowrap" onclick="resetAndOpenForm()">
                             <i class="bi bi-plus-lg me-1"></i> Tambah
                         </button>
                     </div>
@@ -285,19 +285,23 @@
             </div>
         </div>
 
-        <!-- FORM INPUT -->
+        <!-- FORM INPUT / EDIT -->
         <div id="page-form" class="content-page d-none">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-7">
                     <div class="card shadow-sm">
                         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-file-earmark-plus text-primary me-2"></i> Form Input / Update Punch Keramik</h5>
+                            <h5 class="mb-0 fw-bold text-dark" id="formTitle"><i class="bi bi-file-earmark-plus text-primary me-2"></i> Form Input Punch Keramik</h5>
                             <button class="btn btn-sm btn-outline-secondary px-3" onclick="switchPage('dashboard')">
                                 <i class="bi bi-arrow-left me-1"></i> Kembali
                             </button>
                         </div>
                         <div class="card-body p-4">
                             <form id="formPunch" onsubmit="submitData(event)">
+                                <!-- Hidden input untuk mode Edit (menyimpan nomor baris sheet) -->
+                                <input type="hidden" id="row_id" name="row_id" value="">
+                                <input type="hidden" id="action" name="action" value="create">
+
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label for="mesin" class="form-label fw-semibold small text-secondary">Merk Mesin Press</label>
@@ -533,7 +537,7 @@
                 });
         }
 
-        // RENDER TABEL DENGAN PAGINATION (10 ITEM PER HALAMAN)
+        // RENDER TABEL DENGAN TOMBOL EDIT & DELETE (CRUD LENGKAP)
         function renderTable() {
             const tableBody = document.getElementById('table-body');
             let html = '';
@@ -551,17 +555,20 @@
 
             paginatedData.forEach((item, index) => {
                 let actualIndex = start + index + 1;
-                let cond = item.kondisi ? item.kondisi.trim().toLowerCase() : '';
+                let cond = item.kondisi ? String(item.kondisi).trim().toLowerCase() : '';
                 let badgeClass = 'bg-secondary bg-opacity-10 text-secondary border border-secondary';
                 if (cond === 'ready') badgeClass = 'bg-success bg-opacity-10 text-success border border-success';
                 else if (cond === 'repair') badgeClass = 'bg-warning bg-opacity-10 text-warning text-dark border border-warning';
                 else if (cond === 'rusak') badgeClass = 'bg-danger bg-opacity-10 text-danger border border-danger';
                 else if (cond === 'baru') badgeClass = 'bg-info bg-opacity-10 text-info text-dark border border-info';
 
-                let tglPakai = item.tanggalPakai ? item.tanggalPakai.split('T')[0] : '-';
+                let tglPakai = item.tanggalPakai ? String(item.tanggalPakai).split('T')[0] : '-';
                 let formattedCounter = (!isNaN(item.counterPunch) && item.counterPunch > 0) ? Number(item.counterPunch).toLocaleString() : '- (Baru)';
                 let jumlahPcs = item.jumlahPcs ? `${item.jumlahPcs} Pcs` : '1 Pcs';
-                let detailTipe = item.posisi === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif && item.kodeMotif !== '-' ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
+                let detailTipe = String(item.posisi) === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif && item.kodeMotif !== '-' ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
+
+                // Simpan data item dalam bentuk JSON string aman untuk parameter fungsi edit
+                let itemJson = encodeURIComponent(JSON.stringify(item));
 
                 html += `
                     <tr>
@@ -576,8 +583,8 @@
                         <td>${formattedCounter}</td>
                         <td>${tglPakai}</td>
                         <td class="text-end pe-3">
-                            <button class="btn btn-sm btn-light text-primary border" title="Edit"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-light text-danger border" title="Hapus"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-sm btn-light text-primary border me-1" title="Edit" onclick="editData('${itemJson}')"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-sm btn-light text-danger border" title="Hapus" onclick="deleteData(${item.row})"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -633,8 +640,6 @@
                 let pcs = Number(item.jumlahPcs) || 1;
                 totalPcs += pcs;
                 let tipe = String(item.tipeBawah || 'Polos').trim().toLowerCase();
-                
-                // AMAN: Dibungkus String() agar jika nilainya angka tidak error .trim()
                 let size = String(item.size || 'Unknown').trim();
                 let posisi = String(item.posisi || '').trim();
                 let kondisi = String(item.kondisi || '').trim().toLowerCase();
@@ -675,7 +680,7 @@
             }
             document.getElementById('detail-motif-size').innerHTML = motifHtml || '<span class="text-muted">Belum ada data</span>';
         }
-        
+
         function filterTable() {
             let keyword = document.getElementById('searchInput').value.toLowerCase();
             filteredDataGlobal = allDataGlobal.filter(item => {
@@ -690,6 +695,87 @@
             renderTable();
         }
 
+        // BUKA FORM DALAM MODE TAMBAH BARU
+        function resetAndOpenForm() {
+            document.getElementById('formPunch').reset();
+            document.getElementById('row_id').value = "";
+            document.getElementById('action').value = "create";
+            document.getElementById('formTitle').innerHTML = `<i class="bi bi-file-earmark-plus text-primary me-2"></i> Form Input Punch Keramik`;
+            document.getElementById('btnSimpan').innerText = "Simpan ke Google Sheets";
+            handlePosisiChange();
+            handleKondisiChange();
+            switchPage('form');
+        }
+
+        // BUKA FORM DALAM MODE EDIT
+        function editData(encodedItem) {
+            let item = JSON.parse(decodeURIComponent(encodedItem));
+
+            document.getElementById('row_id').value = item.row;
+            document.getElementById('action').value = "update";
+            document.getElementById('mesin').value = item.mesin || '';
+            document.getElementById('kode_punch').value = item.kodePunch || '';
+            document.getElementById('posisi').value = item.posisi || '';
+            
+            handlePosisiChange();
+
+            if (item.posisi === 'Lower') {
+                document.getElementById('tipe_bawah').value = item.tipeBawah || 'Polos';
+                handleTipeChange();
+                if (item.tipeBawah === 'Motif') {
+                    document.getElementById('kode_motif').value = item.kodeMotif || '';
+                }
+            }
+
+            document.getElementById('size').value = item.size || '';
+            document.getElementById('kondisi').value = item.kondisi || '';
+            handleKondisiChange();
+
+            document.getElementById('jumlah_pcs').value = item.jumlahPcs || 1;
+            if (item.kondisi !== 'Baru') {
+                document.getElementById('counter_punch').value = item.counterPunch || 0;
+            }
+
+            if (item.tanggalPakai) {
+                document.getElementById('tanggal_pakai').value = String(item.tanggalPakai).split('T')[0];
+            }
+
+            document.getElementById('formTitle').innerHTML = `<i class="bi bi-pencil-square text-warning me-2"></i> Edit Data Punch (Baris #${item.row})`;
+            document.getElementById('btnSimpan').innerText = "Perbarui Data";
+            switchPage('form');
+        }
+
+        // HAPUS DATA
+        function deleteData(rowNum) {
+            if (!confirm(`Apakah Anda yakin ingin menghapus data pada baris #${rowNum}?`)) return;
+
+            showNotification("Menghapus...", "Sedang menghapus data dari server...", "warning");
+
+            let formData = new URLSearchParams();
+            formData.append('action', 'delete');
+            formData.append('row_id', rowNum);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                redirect: 'follow'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showNotification("Berhasil Dihapus", "Data punch berhasil dihapus.", "success");
+                    loadDashboardData();
+                } else {
+                    showNotification("Gagal", data.message, "danger");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification("Kesalahan Koneksi", "Gagal terhubung ke server.", "danger");
+            });
+        }
+
+        // SUBMIT FORM (CREATE ATAU UPDATE)
         function submitData(event) {
             event.preventDefault();
             const btnSimpan = document.getElementById('btnSimpan');
@@ -706,10 +792,8 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    showNotification("Berhasil!", "Data punch baru telah tersimpan ke Google Sheets.", "success");
+                    showNotification("Berhasil!", data.message, "success");
                     document.getElementById('formPunch').reset();
-                    handlePosisiChange();
-                    handleKondisiChange();
                     switchPage('dashboard');
                 } else {
                     showNotification("Gagal Menyimpan", data.message, "danger");
@@ -721,7 +805,7 @@
             })
             .finally(() => {
                 btnSimpan.disabled = false;
-                btnSimpan.innerHTML = "Simpan ke Google Sheets";
+                btnSimpan.innerText = document.getElementById('action').value === 'update' ? "Perbarui Data" : "Simpan ke Google Sheets";
             });
         }
 
