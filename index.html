@@ -48,7 +48,7 @@
         .stat-card {
             border: none;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -199,43 +199,44 @@
             <!-- ALERT BANNER UNTUK LOW STOCK / OVER STROKE -->
             <div id="alertBannerContainer" class="mb-4"></div>
 
+            <!-- KARTU STATISTIK (Responsif HP: col-6 di mobile, col-xl-3 di PC) -->
             <div class="row g-3 mb-4">
-                <div class="col-12 col-xl-3">
+                <div class="col-6 col-xl-3">
                     <div class="card stat-card shadow-sm border-start border-primary border-4 h-100">
-                        <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Total Keseluruhan</span>
-                            <h2 class="fw-bold mb-0 text-primary mt-1" id="val-total-pcs">0 Pcs</h2>
-                            <small class="text-muted" id="val-total-jenis">0 Jenis Item terdaftar</small>
+                        <div class="card-body p-3">
+                            <span class="text-muted small fw-semibold text-uppercase d-block" style="font-size: 0.75rem;">Total Keseluruhan</span>
+                            <h3 class="fw-bold mb-0 text-primary mt-1" id="val-total-pcs">0 Pcs</h3>
+                            <small class="text-muted" id="val-total-jenis" style="font-size: 0.75rem;">0 Jenis Item</small>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-xl-3">
+                <div class="col-6 col-xl-3">
                     <div class="card stat-card shadow-sm border-start border-success border-4 h-100">
-                        <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Total Punch Polos</span>
-                            <h2 class="fw-bold mb-0 text-success mt-1" id="val-polos-pcs">0 Pcs</h2>
-                            <div class="mt-2 small text-secondary" id="detail-polos-size">Memuat ukuran...</div>
+                        <div class="card-body p-3">
+                            <span class="text-muted small fw-semibold text-uppercase d-block" style="font-size: 0.75rem;">Total Polos</span>
+                            <h3 class="fw-bold mb-0 text-success mt-1" id="val-polos-pcs">0 Pcs</h3>
+                            <div class="mt-1 text-secondary" id="detail-polos-size" style="font-size: 0.75rem;">Memuat...</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-xl-3">
+                <div class="col-6 col-xl-3">
                     <div class="card stat-card shadow-sm border-start border-info border-4 h-100">
-                        <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Total Punch Motif</span>
-                            <h2 class="fw-bold mb-0 text-info mt-1" id="val-motif-pcs">0 Pcs</h2>
-                            <div class="mt-2 small text-secondary" id="detail-motif-size">Memuat ukuran...</div>
+                        <div class="card-body p-3">
+                            <span class="text-muted small fw-semibold text-uppercase d-block" style="font-size: 0.75rem;">Total Motif</span>
+                            <h3 class="fw-bold mb-0 text-info mt-1" id="val-motif-pcs">0 Pcs</h3>
+                            <div class="mt-1 text-secondary" id="detail-motif-size" style="font-size: 0.75rem;">Memuat...</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-xl-3">
+                <div class="col-6 col-xl-3">
                     <div class="card stat-card shadow-sm border-start border-dark border-4 h-100">
-                        <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Rincian Kondisi Stok</span>
-                            <div class="mt-2 d-flex flex-column gap-1 small text-dark">
-                                <div class="d-flex justify-content-between"><span>✨ Baru:</span><strong id="cond-baru">0 Pcs</strong></div>
-                                <div class="d-flex justify-content-between"><span>✅ Ready:</span><strong id="cond-ready">0 Pcs</strong></div>
-                                <div class="d-flex justify-content-between"><span>⚠️ Repair:</span><strong id="cond-repair">0 Pcs</strong></div>
-                                <div class="d-flex justify-content-between"><span>❌ Rusak:</span><strong id="cond-rusak">0 Pcs</strong></div>
+                        <div class="card-body p-3">
+                            <span class="text-muted small fw-semibold text-uppercase d-block" style="font-size: 0.75rem;">Kondisi Stok</span>
+                            <div class="mt-1 d-flex flex-column gap-1 text-dark" style="font-size: 0.75rem;">
+                                <div class="d-flex justify-content-between"><span>✨ Baru:</span><strong id="cond-baru">0</strong></div>
+                                <div class="d-flex justify-content-between"><span>✅ Ready:</span><strong id="cond-ready">0</strong></div>
+                                <div class="d-flex justify-content-between"><span>⚠️ Repair:</span><strong id="cond-repair">0</strong></div>
+                                <div class="d-flex justify-content-between"><span>❌ Rusak:</span><strong id="cond-rusak">0</strong></div>
                             </div>
                         </div>
                     </div>
@@ -247,13 +248,12 @@
                     <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-table text-primary me-2"></i> Daftar Status Punch Press & Rincian Stok</h5>
                     
                     <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-end flex-wrap">
-                        <div class="input-group input-group-sm" style="max-width: 250px;">
+                        <div class="input-group input-group-sm" style="max-width: 230px;">
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Cari merk, kode, size..." onkeyup="filterTable()">
+                            <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Cari merk, kode..." onkeyup="filterTable()">
                         </div>
-                        <!-- TOMBOL EKSPOR EXCEL -->
                         <button class="btn btn-success btn-sm text-nowrap" onclick="exportToExcel()">
-                            <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Excel
+                            <i class="bi bi-file-earmark-excel me-1"></i> Ekspor
                         </button>
                         <button class="btn btn-primary btn-sm text-nowrap" onclick="resetAndOpenForm()">
                             <i class="bi bi-plus-lg me-1"></i> Tambah
@@ -304,7 +304,7 @@
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-clock-history text-primary me-2"></i> Riwayat Aktivitas & Log Sistem (Audit Trail)</h5>
                     <button class="btn btn-sm btn-outline-secondary px-3" onclick="switchPage('dashboard')">
-                        <i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard
+                        <i class="bi bi-arrow-left me-1"></i> Kembali
                     </button>
                 </div>
                 <div class="card-body p-0">
@@ -424,6 +424,27 @@
         </div>
     </div>
 
+    <!-- MODAL KONFIRMASI HAPUS KUSTOM (ESTETIK) -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 14px;">
+                <div class="modal-body text-center p-4">
+                    <div class="text-danger mb-3">
+                        <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Konfirmasi Hapus Data</h5>
+                    <p class="text-muted small mb-4" id="deleteModalMessage">Apakah Anda yakin ingin menghapus data punch ini?</p>
+                    <input type="hidden" id="deleteRowId">
+                    <input type="hidden" id="deleteRowKode">
+                    <div class="d-flex justify-content-center gap-2">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger px-4" onclick="executeDelete()">Ya, Hapus</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- CONTAINER NOTIFIKASI ESTETIK -->
     <div id="customToastContainer"></div>
 
@@ -511,7 +532,7 @@
         function addAuditLog(activity, detail, status = 'Sukses') {
             let timeStr = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' });
             auditLogs.unshift({ time: timeStr, activity: activity, detail: detail, status: status });
-            if (auditLogs.length > 50) auditLogs.pop(); // Batasi maksimal 50 log terakhir
+            if (auditLogs.length > 50) auditLogs.pop();
             renderAuditLogTable();
         }
 
@@ -607,7 +628,6 @@
                 });
         }
 
-        // FITUR PERINGATAN DINI (LOW STOCK & OVER STROKE ALERT)
         function checkEarlyWarnings(data) {
             let alertContainer = document.getElementById('alertBannerContainer');
             let warnings = [];
@@ -622,13 +642,11 @@
                     readyCount += pcs;
                 }
 
-                // Peringatan Over Stroke (Misal > 50.000 pukulan perlu perhatian khusus)
                 if (stroke > 50000) {
                     warnings.push(`Punch <b>${item.kodePunch}</b> (${item.mesin}) mencapai <b>${stroke.toLocaleString()} Stroke</b> (Perlu Inspeksi/Repair).`);
                 }
             });
 
-            // Peringatan Low Stock (Jika total stok ready < 3 pcs)
             if (readyCount < 3) {
                 warnings.push(`Stok Siap Pakai (Ready) menipis! Total sisa: <b>${readyCount} Pcs</b>.`);
             }
@@ -637,7 +655,7 @@
                 let html = `<div class="alert alert-warning border-0 shadow-sm d-flex align-items-center gap-3" role="alert">
                     <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
                     <div>
-                        <h6 class="fw-bold mb-1">Peringatan Dini Sistem Maintenance (Low Stock / Over Stroke):</h6>
+                        <h6 class="fw-bold mb-1">Peringatan Dini Sistem Maintenance:</h6>
                         <ul class="mb-0 ps-3 small">`;
                 warnings.forEach(w => html += `<li>${w}</li>`);
                 html += `</ul></div></div>`;
@@ -647,7 +665,6 @@
             }
         }
 
-        // RENDER TABEL DENGAN CRUD
         function renderTable() {
             const tableBody = document.getElementById('table-body');
             let html = '';
@@ -676,6 +693,7 @@
                 let formattedCounter = (!isNaN(item.counterPunch) && item.counterPunch > 0) ? Number(item.counterPunch).toLocaleString() : '- (Baru)';
                 let jumlahPcs = item.jumlahPcs ? `${item.jumlahPcs} Pcs` : '1 Pcs';
                 let detailTipe = String(item.posisi) === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif && item.kodeMotif !== '-' ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
+                let kodeAman = item.kodePunch || 'Tanpa Kode';
 
                 let itemJson = encodeURIComponent(JSON.stringify(item));
 
@@ -683,7 +701,7 @@
                     <tr>
                         <td class="ps-3 fw-semibold text-muted">${actualIndex}</td>
                         <td><span class="fw-semibold text-dark">${item.mesin || '-'}</span></td>
-                        <td><code>${item.kodePunch || '-'}</code></td>
+                        <td><code>${kodeAman}</code></td>
                         <td><span class="badge bg-light text-dark border">${item.posisi || '-'}</span></td>
                         <td>${detailTipe}</td>
                         <td>${item.size}</td>
@@ -693,7 +711,7 @@
                         <td>${tglPakai}</td>
                         <td class="text-end pe-3">
                             <button class="btn btn-sm btn-light text-primary border me-1" title="Edit" onclick="editData('${itemJson}')"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-light text-danger border" title="Hapus" onclick="deleteData(${item.row}, '${item.kodePunch}')"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-sm btn-light text-danger border" title="Hapus" onclick="confirmDelete(${item.row}, '${kodeAman}')"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -705,7 +723,6 @@
             renderPagination();
         }
 
-        // FITUR EKSPOR KE EXCEL / CSV (.xls)
         function exportToExcel() {
             if (allDataGlobal.length === 0) {
                 showNotification("Ekspor Gagal", "Tidak ada data untuk diekspor.", "warning");
@@ -807,7 +824,7 @@
             });
 
             document.getElementById('val-total-pcs').innerText = `${totalPcs.toLocaleString()} Pcs`;
-            document.getElementById('val-total-jenis').innerText = `${totalJenis} Jenis Item tercatat`;
+            document.getElementById('val-total-jenis').innerText = `${totalJenis} Jenis Item`;
             document.getElementById('val-polos-pcs').innerText = `${polosPcs.toLocaleString()} Pcs`;
             document.getElementById('val-motif-pcs').innerText = `${motifPcs.toLocaleString()} Pcs`;
 
@@ -818,13 +835,13 @@
 
             let polosHtml = '';
             for (let [size, count] of Object.entries(polosBySize)) {
-                polosHtml += `<span class="badge bg-success bg-opacity-10 text-success border border-success me-1 mb-1">${size}: ${count} Pcs</span>`;
+                polosHtml += `<span class="badge bg-success bg-opacity-10 text-success border border-success me-1 mb-1">${size}: ${count}Pcs</span>`;
             }
             document.getElementById('detail-polos-size').innerHTML = polosHtml || '<span class="text-muted">Belum ada data</span>';
 
             let motifHtml = '';
             for (let [size, count] of Object.entries(motifBySize)) {
-                motifHtml += `<span class="badge bg-info bg-opacity-10 text-info text-dark border border-info me-1 mb-1">${size}: ${count} Pcs</span>`;
+                motifHtml += `<span class="badge bg-info bg-opacity-10 text-info text-dark border border-info me-1 mb-1">${size}: ${count}Pcs</span>`;
             }
             document.getElementById('detail-motif-size').innerHTML = motifHtml || '<span class="text-muted">Belum ada data</span>';
         }
@@ -891,8 +908,24 @@
             switchPage('form');
         }
 
-        function deleteData(rowNum, kode) {
-            if (!confirm(`Apakah Anda yakin ingin menghapus punch dengan kode [${kode}]?`)) return;
+        // MEMBUKA MODAL KONFIRMASI HAPUS KUSTOM (MENGGANTIKAN CONFIRM BAWAAN BROWSER)
+        function confirmDelete(rowNum, kode) {
+            document.getElementById('deleteRowId').value = rowNum;
+            document.getElementById('deleteRowKode').value = kode;
+            document.getElementById('deleteModalMessage').innerHTML = `Apakah Anda yakin ingin menghapus data punch dengan kode <b>[${kode}]</b>?`;
+            
+            let myModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            myModal.show();
+        }
+
+        // EKSEKUSI HAPUS SETELAH DIKONFIRMASI DI MODAL
+        function executeDelete() {
+            let rowNum = document.getElementById('deleteRowId').value;
+            let kode = document.getElementById('deleteRowKode').value;
+
+            let modalEl = document.getElementById('deleteModal');
+            let modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance.hide();
 
             showNotification("Menghapus...", "Sedang menghapus data dari server...", "warning");
 
@@ -908,7 +941,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    showNotification("Berhasil Dihapus", "Data punch berhasil dihapus.", "success");
+                    showNotification("Berhasil Dihapus", `Data punch [${kode}] berhasil dihapus.`, "success");
                     addAuditLog("Hapus Data", `Menghapus punch [${kode}] dari baris #${rowNum}`, "Terhapus");
                     loadDashboardData();
                 } else {
@@ -965,7 +998,6 @@
             const navLog = document.getElementById('nav-log');
             const navForm = document.getElementById('nav-form');
 
-            // Sembunyikan semua
             pageDashboard.classList.add('d-none');
             pageLog.classList.add('d-none');
             pageForm.classList.add('d-none');
