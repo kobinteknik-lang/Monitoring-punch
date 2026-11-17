@@ -3,115 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Stok & Servis Punch Keramik</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #334155; }
-        .hero-header { background: #0f172a; border-bottom: 3px solid #f59e0b; }
-        .card-sm { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; }
-        .kpi-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; border-left: 4px solid #64748b; }
-        .border-ready { border-left-color: #10b981 !important; }
-        .border-pakai { border-left-color: #3b82f6 !important; }
-        .border-repair { border-left-color: #f59e0b !important; }
-        .border-vendor { border-left-color: #8b5cf6 !important; }
-        .border-rusak { border-left-color: #ef4444 !important; }
-        .table-custom th { background-color: #0f172a; color: #ffffff; font-size: 0.75rem; text-transform: uppercase; white-space: nowrap; }
-        .table-custom td { vertical-align: middle; white-space: nowrap; font-size: 0.8rem; }
-        .table-matrix th { font-size: 0.75rem; text-transform: uppercase; }
-        .table-matrix td { font-size: 0.8rem; }
-    </style>
+    <title>Manajemen Data Punch - Pro</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
-<body>
+<body class="bg-light">
 
-    <header class="hero-header text-white py-2 sticky-top">
-        <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-2">
-                <i class="fa-solid fa-boxes-stacked text-warning fs-5"></i>
-                <h1 class="h6 mb-0 fw-bold">MONITORING STOK & SERVIS PUNCH</h1>
-            </div>
-            <div class="d-flex gap-2">
-                <button onclick="fetchFromGoogleSheets()" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-rotate me-1"></i> Sync</button>
-                <button onclick="openModal('add')" class="btn btn-warning btn-sm fw-bold"><i class="fa-solid fa-plus me-1"></i> Tambah Data</button>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-tools"></i> Punch Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="nav-dashboard" href="#" onclick="switchPage('dashboard')">
+                            <i class="bi bi-speedometer2"></i> Dashboard & List
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="nav-form" href="#" onclick="switchPage('form')">
+                            <i class="bi bi-plus-circle"></i> Input Punch Baru
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="container-fluid px-3 py-3">
+    <div class="container my-4">
 
-        <div id="syncLoader" class="alert alert-info d-none p-2 text-center small fw-bold">
-            <i class="fa-solid fa-spinner fa-spin me-2"></i> Menghubungkan ke Cloud...
-        </div>
+        <!-- HALAMAN 1: DASHBOARD & LIST -->
+        <div id="page-dashboard" class="content-page">
+            
+            <!-- Cards Statistik -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-white bg-primary shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title text-uppercase">Total Punch</h6>
+                            <h2 class="fw-bold mb-0" id="val-total">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-white bg-success shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title text-uppercase">Ready</h6>
+                            <h2 class="fw-bold mb-0" id="val-ready">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-white bg-warning shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title text-uppercase text-dark">Repair</h6>
+                            <h2 class="fw-bold mb-0 text-dark" id="val-repair">0</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-white bg-danger shadow-sm">
+                        <div class="card-body">
+                            <h6 class="card-title text-uppercase">Rusak</h6>
+                            <h2 class="fw-bold mb-0" id="val-rusak">0</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- KPI Ringkasan Stok & Servis -->
-        <div class="row g-2 mb-3">
-            <div class="col">
-                <div class="kpi-card">
-                    <span class="small text-muted d-block fw-bold">TOTAL</span>
-                    <h5 id="stat-total" class="fw-bold mb-0">0</h5>
+            <!-- Tabel List & Search Bar -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-list-task"></i> Daftar List Punch</h5>
+                    
+                    <!-- Search Bar & Tombol Tambah -->
+                    <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-end">
+                        <div class="input-group input-group-sm" style="max-width: 250px;">
+                            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Cari size / motif..." onkeyup="filterTable()">
+                        </div>
+                        <button class="btn btn-primary btn-sm text-nowrap" onclick="switchPage('form')">
+                            <i class="bi bi-plus"></i> Tambah
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="kpi-card border-ready">
-                    <span class="small text-success d-block fw-bold">READY</span>
-                    <h5 id="stat-ready" class="fw-bold text-success mb-0">0</h5>
-                </div>
-            </div>
-            <div class="col">
-                <div class="kpi-card border-pakai">
-                    <span class="small text-primary d-block fw-bold">TERPAKAI</span>
-                    <h5 id="stat-terpakai" class="fw-bold text-primary mb-0">0</h5>
-                </div>
-            </div>
-            <div class="col">
-                <div class="kpi-card border-repair">
-                    <span class="small text-warning d-block fw-bold">REPAIR INTERNAL</span>
-                    <h5 id="stat-repair" class="fw-bold text-warning mb-0">0</h5>
-                </div>
-            </div>
-            <div class="col">
-                <div class="kpi-card border-vendor">
-                    <span class="small d-block fw-bold" style="color: #8b5cf6;">SERVIS VENDOR</span>
-                    <h5 id="stat-vendor" class="fw-bold mb-0" style="color: #8b5cf6;">0</h5>
-                </div>
-            </div>
-            <div class="col">
-                <div class="kpi-card border-rusak">
-                    <span class="small text-danger d-block fw-bold">RUSAK</span>
-                    <h5 id="stat-rusak" class="fw-bold text-danger mb-0">0</h5>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABEL KHUSUS: PUNCH SEDANG SERVIS DI VENDOR -->
-        <div class="card card-sm mb-3 border-purple" style="border-left: 4px solid #8b5cf6;">
-            <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold small" style="color: #7e22ce;">
-                    <i class="fa-solid fa-truck-ramp-box me-2"></i> Daftar Punch Sedang Servis di Vendor
-                </h6>
-                <button class="btn btn-sm btn-outline-secondary py-0 px-2 fs-7" type="button" data-bs-toggle="collapse" data-bs-target="#activeVendorCollapse">
-                    Toggle Tampilan
-                </button>
-            </div>
-            <div class="collapse show" id="activeVendorCollapse">
-                <div class="card-body p-2">
+                <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-sm table-hover align-middle mb-0 table-matrix">
+                        <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="text-start">Kode Punch</th>
-                                    <th>Ukuran / Tebal</th>
-                                    <th>Servis di Vendor / Bengkel</th>
-                                    <th class="text-center">Jumlah</th>
-                                    <th>Tgl Kirim / Catatan / Surat Jalan</th>
-                                    <th class="text-center">Aksi</th>
+                                    <th>#</th>
+                                    <th>Size</th>
+                                    <th>Motif / Polos</th>
+                                    <th>Kondisi</th>
+                                    <th>Counter Punch</th>
+                                    <th>Tanggal Terakhir Pakai</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="activeVendorTableBody">
-                                <tr><td colspan="6" class="text-center text-muted p-2">Tidak ada punch yang sedang diservis di vendor.</td></tr>
+                            <tbody id="table-body">
+                                <tr>
+                                    <td colspan="7" class="text-center py-4 text-muted">Memuat data dari Google Sheets...</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -119,750 +117,242 @@
             </div>
         </div>
 
-        <!-- TABEL REKAPITULASI (MATRIX PER POSISI & UKURAN) -->
-        <div class="card card-sm mb-3">
-            <div class="card-header bg-dark text-white py-2 d-flex justify-content-between align-items-center">
-                <h6 class="mb-0 fw-bold small"><i class="fa-solid fa-chart-pie text-warning me-2"></i> Rekapitulasi Stok Per Posisi & Per Ukuran</h6>
-                <button class="btn btn-sm btn-outline-light py-0 px-2 fs-7" type="button" data-bs-toggle="collapse" data-bs-target="#matrixCollapse">
-                    Toggle Tampilan
-                </button>
-            </div>
-            <div class="collapse" id="matrixCollapse">
-                <div class="card-body p-2">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-bordered align-middle text-center mb-0 table-matrix">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="text-start">Posisi</th>
-                                    <th class="text-start">Ukuran (cm)</th>
-                                    <th>Ready</th>
-                                    <th>Terpakai</th>
-                                    <th>Repair Int</th>
-                                    <th>Servis Vendor</th>
-                                    <th>Rusak</th>
-                                    <th>Total Pcs</th>
-                                </tr>
-                            </thead>
-                            <tbody id="matrixTableBody">
-                                <tr><td colspan="8" class="text-muted p-2">Belum ada data.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filter Sederhana -->
-        <div class="card card-sm mb-3">
-            <div class="card-body p-2">
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <input type="text" id="searchInput" oninput="renderTable()" class="form-control form-control-sm" placeholder="Cari Kode, Vendor, Ukuran, Tebal, Rak...">
-                    </div>
-                    <div class="col-md-3">
-                        <select id="filterCondition" onchange="renderTable()" class="form-select form-select-sm">
-                            <option value="ALL">-- Semua Status Stok --</option>
-                            <option value="Ready">Ready</option>
-                            <option value="Terpakai">Terpakai</option>
-                            <option value="Repair">Repair Internal</option>
-                            <option value="Vendor">Sedang Servis Vendor</option>
-                            <option value="Rusak">Rusak</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <select id="filterType" onchange="renderTable()" class="form-select form-select-sm">
-                            <option value="ALL">-- Semua Posisi --</option>
-                            <option value="UPPER">UPPER</option>
-                            <option value="LOWER">LOWER</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button onclick="resetAllFilters()" class="btn btn-light border btn-sm w-100">Reset Filter</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tabel Detail Stok Utama -->
-        <div class="card card-sm overflow-hidden">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 table-custom">
-                    <thead>
-                        <tr>
-                            <th class="px-3">Kode Punch</th>
-                            <th>Vendor Pembuat</th>
-                            <th>Posisi</th>
-                            <th>Ukuran</th>
-                            <th>Tebal</th>
-                            <th>Lokasi / Lini</th>
-                            <th class="text-center">Rincian Stok (Pcs)</th>
-                            <th class="text-center">Total</th>
-                            <th class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="punchTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- FORM INPUT DATA (DENGAN PILIHAN STATUS STOK SINGLE) -->
-    <div class="modal fade" id="punchModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header hero-header text-white py-2">
-                    <h6 class="modal-title fw-bold" id="modalTitle">Form Data Punch</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <form id="punchForm" onsubmit="handleFormSubmit(event)">
-                    <div class="modal-body p-3">
-                        <input type="hidden" id="punchId">
-                        
-                        <div class="row g-2 mb-2">
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Kode Punch *</label>
-                                <input type="text" id="formCode" required class="form-control form-control-sm" placeholder="Contoh: P6060-01">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Vendor Pembuat *</label>
-                                <input type="text" id="formVendor" required class="form-control form-control-sm" placeholder="Contoh: MDI / SAP">
-                            </div>
+        <!-- HALAMAN 2: FORM INPUT -->
+        <div id="page-form" class="content-page d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="bi bi-file-earmark-plus"></i> Form Input Punch</h5>
+                            <button class="btn btn-sm btn-light text-primary fw-bold" onclick="switchPage('dashboard')">
+                                <i class="bi bi-arrow-left"></i> Kembali
+                            </button>
                         </div>
+                        <div class="card-body">
+                            <form id="formPunch" onsubmit="submitData(event)">
+                                
+                                <div class="mb-3">
+                                    <label for="size" class="form-label">Size</label>
+                                    <input type="text" class="form-control" id="size" name="size" placeholder="Contoh: 10mm / M12" required>
+                                </div>
 
-                        <div class="row g-2 mb-2">
-                            <div class="col-4">
-                                <label class="form-label small fw-bold">Posisi *</label>
-                                <select id="formType" class="form-select form-select-sm">
-                                    <option value="UPPER">UPPER (Atas)</option>
-                                    <option value="LOWER">LOWER (Bawah)</option>
-                                </select>
-                            </div>
-                            <div class="col-4">
-                                <label class="form-label small fw-bold">Ukuran (cm) *</label>
-                                <input type="text" id="formSize" required class="form-control form-control-sm" placeholder="Contoh: 60x60">
-                            </div>
-                            <div class="col-4">
-                                <label class="form-label small fw-bold">Tebal (mm)</label>
-                                <input type="text" id="formThickness" class="form-control form-control-sm" placeholder="Contoh: 12">
-                            </div>
-                        </div>
-
-                        <div class="row g-2 mb-2">
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Lini Mesin</label>
-                                <input type="text" id="formLine" class="form-control form-control-sm" placeholder="Line 1">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Lokasi Rak</label>
-                                <input type="text" id="formRackLocation" class="form-control form-control-sm" placeholder="Rak A-01">
-                            </div>
-                        </div>
-
-                        <!-- INPUT STOK SATU PER SATU -->
-                        <div class="p-2 border rounded bg-light mt-3">
-                            <label class="form-label small fw-bold d-block mb-1 text-primary">Input Jumlah Stok</label>
-                            <div class="row g-2">
-                                <div class="col-7">
-                                    <label class="form-label small">Pilih Status Stok *</label>
-                                    <select id="formSelectedStatus" onchange="handleStatusChange()" class="form-select form-select-sm">
-                                        <option value="ready">Ready</option>
-                                        <option value="terpakai">Terpakai (Di Press)</option>
-                                        <option value="repair">Repair Internal</option>
-                                        <option value="vendorService">Servis Vendor</option>
-                                        <option value="rusak">Rusak / Afkir</option>
+                                <div class="mb-3">
+                                    <label for="motif_polos" class="form-label">Motif / Polos</label>
+                                    <select class="form-select" id="motif_polos" name="motif_polos" required>
+                                        <option value="" selected disabled>Pilih Tipe...</option>
+                                        <option value="Polos">Polos</option>
+                                        <option value="Motif">Motif</option>
                                     </select>
                                 </div>
-                                <div class="col-5">
-                                    <label class="form-label small">Jumlah (Pcs) *</label>
-                                    <input type="number" id="formSelectedQty" value="1" min="0" required class="form-control form-control-sm">
+
+                                <div class="mb-3">
+                                    <label for="kondisi" class="form-label">Kondisi</label>
+                                    <select class="form-select" id="kondisi" name="kondisi" required>
+                                        <option value="" selected disabled>Pilih Kondisi...</option>
+                                        <option value="Ready">Ready</option>
+                                        <option value="Repair">Repair</option>
+                                        <option value="Rusak">Rusak</option>
+                                    </select>
                                 </div>
-                            </div>
-                            <!-- Field Kondisional: Hanya muncul jika Servis Vendor dipilih -->
-                            <div class="mt-2 d-none" id="vendorNameContainer">
-                                <label class="form-label small fw-bold text-purple" style="color:#7e22ce;">Nama Vendor / Bengkel Servis *</label>
-                                <input type="text" id="formActiveVendorName" class="form-control form-control-sm" placeholder="Contoh: Bengkel Presisi / PT MDI">
-                            </div>
-                        </div>
 
+                                <div class="mb-3">
+                                    <label for="counter_punch" class="form-label">Counter Punch</label>
+                                    <input type="number" class="form-control" id="counter_punch" name="counter_punch" placeholder="Masukkan jumlah counter" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="tanggal_pakai" class="form-label">Tanggal Terakhir Pakai</label>
+                                    <input type="date" class="form-control" id="tanggal_pakai" name="tanggal_pakai" required>
+                                </div>
+
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                    <button type="button" class="btn btn-secondary me-md-2" onclick="switchPage('dashboard')">Batal</button>
+                                    <button type="submit" id="btnSimpan" class="btn btn-primary">Simpan ke Google Sheets</button>
+                                </div>
+
+                            </form>
+                        </div>
                     </div>
-                    <div class="modal-footer py-1">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning btn-sm fw-bold">Simpan</button>
-                    </div>
-                </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER (Pojok Kanan Bawah) -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    Pesan notifikasi di sini...
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Mutasi Stok -->
-    <div class="modal fade" id="mutationModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white py-2">
-                    <h6 class="modal-title fw-bold"><i class="fa-solid fa-right-left text-warning me-2"></i> Mutasi & Kirim Servis Vendor</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <form id="mutationForm" onsubmit="handleMutationSubmit(event)">
-                    <div class="modal-body p-3">
-                        <input type="hidden" id="mutPunchId">
-                        <div class="alert alert-light border small p-2 mb-2" id="mutPunchInfo"></div>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-                        <div class="mb-2">
-                            <label class="form-label small fw-bold">Aktivitas Mutasi *</label>
-                            <select id="mutActionType" required class="form-select form-select-sm">
-                                <option value="PASANG_MESIN">1. Pasang ke Press (Ready -> Terpakai)</option>
-                                <option value="LEPAS_REPAIR">2. Lepas ke Repair Internal (Terpakai -> Repair)</option>
-                                <option value="KIRIM_VENDOR">3. Kirim Servis ke Vendor (Repair/Ready -> Servis Vendor)</option>
-                                <option value="KEMBALI_VENDOR">4. Selesai Servis Vendor (Servis Vendor -> Ready)</option>
-                                <option value="FINISH_REPAIR">5. Selesai Repair Internal (Repair -> Ready)</option>
-                                <option value="AFKIR_RUSAK">6. Deklarasi Rusak (Any -> Rusak)</option>
-                            </select>
-                        </div>
-                        <div class="row g-2 mb-2">
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Jumlah (Pcs) *</label>
-                                <input type="number" id="mutQty" min="1" value="1" required class="form-control form-control-sm">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Nama Vendor / Bengkel Servis *</label>
-                                <input type="text" id="mutVendorName" class="form-control form-control-sm" placeholder="Wajib isi jika kirim servis">
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label small fw-bold">Catatan Mutasi / Surat Jalan *</label>
-                            <textarea id="mutNotes" required class="form-control form-control-sm" rows="2" placeholder="Contoh: Kirim relapping (No. Surat Jalan: SJ-102)"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer py-1">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning btn-sm fw-bold">Simpan Mutasi</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Riwayat Log -->
-    <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-white py-2">
-                    <h6 class="modal-title fw-bold" id="historyModalTitle">Riwayat Mutasi & Servis Vendor</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <table class="table table-sm mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="p-2">Waktu</th>
-                                <th>Aktivitas</th>
-                                <th class="text-center">Qty</th>
-                                <th>Catatan / Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <!-- Script Utama -->
     <script>
-        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwb0f3-feXFqQ0nkjwO6qKHQXXqQke5WikM5s4uiNSxqd1-WhKkEGGaYseOpWyYeq1w/exec";
+        const SCRIPT_URL = "URL_WEB_APP_ANDA_DISINI";
+        let allDataGlobal = []; // Menyimpan data untuk fitur pencarian
 
-        let punchInventory = [];
-        let punchModalBS, mutationModalBS, historyModalBS;
+        window.onload = function() {
+            loadDashboardData();
+        };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            punchModalBS = new bootstrap.Modal(document.getElementById('punchModal'));
-            mutationModalBS = new bootstrap.Modal(document.getElementById('mutationModal'));
-            historyModalBS = new bootstrap.Modal(document.getElementById('historyModal'));
-            fetchFromGoogleSheets();
-        });
-
-        function getProp(obj, prop) {
-            if (!obj) return '';
-            if (obj[prop] !== undefined) return obj[prop];
-            const lowerProp = prop.toLowerCase();
-            for (let k in obj) {
-                if (k.toLowerCase() === lowerProp) return obj[k];
-            }
-            return '';
+        // Fungsi Toast Notification modern
+        function showToast(message, type = 'success') {
+            const toastEl = document.getElementById('liveToast');
+            const toastMsg = document.getElementById('toastMessage');
+            
+            toastMsg.innerText = message;
+            toastEl.className = `toast align-items-center text-white border-0 bg-${type}`;
+            
+            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
         }
 
-        function fetchFromGoogleSheets() {
-            document.getElementById('syncLoader').classList.remove('d-none');
-            fetch(`${GAS_API_URL}?action=read`)
-                .then(res => res.json())
-                .then(res => {
-                    document.getElementById('syncLoader').classList.add('d-none');
-                    if (res.status === 'success') {
-                        punchInventory = res.data || [];
-                        renderActiveVendorTable();
-                        renderMatrixTable();
-                        renderTable();
-                    } else {
-                        alert("Gagal membaca data: " + res.message);
-                    }
+        // Ambil data dari Google Sheets
+        function loadDashboardData() {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data...</td></tr>`;
+
+            fetch(SCRIPT_URL)
+                .then(response => response.json())
+                .then(data => {
+                    allDataGlobal = data; // Simpan data mentah
+                    renderTable(allDataGlobal);
+                    updateCounters(allDataGlobal);
                 })
-                .catch(err => {
-                    document.getElementById('syncLoader').classList.add('d-none');
-                    alert("Gagal terhubung ke Google Sheets!");
+                .catch(error => {
+                    console.error('Error:', error);
+                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">Gagal memuat data. Periksa kembali URL Web App Anda.</td></tr>`;
                 });
         }
 
-        function postToGoogleSheets(actionType, payload, callback) {
-            const pin = prompt("Masukkan PIN Keamanan:");
-            if (!pin) return;
+        // Render tabel berdasarkan data
+        function renderTable(data) {
+            const tableBody = document.getElementById('table-body');
+            let html = '';
 
-            document.getElementById('syncLoader').classList.remove('d-none');
-            fetch(GAS_API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: actionType, pin: pin, payload: payload, id: payload ? payload.id : null })
-            })
-            .then(res => res.json())
-            .then(res => {
-                document.getElementById('syncLoader').classList.add('d-none');
-                if (res.status === "success") {
-                    alert(res.message);
-                    fetchFromGoogleSheets();
-                    if (callback) callback();
-                } else {
-                    alert("Gagal: " + res.message);
-                }
-            })
-            .catch(err => {
-                document.getElementById('syncLoader').classList.add('d-none');
-                alert("Kesalahan koneksi saat menyimpan!");
-            });
-        }
-
-        // Tampilkan input vendor jika status Servis Vendor dipilih
-        function handleStatusChange() {
-            const selectedStatus = document.getElementById('formSelectedStatus').value;
-            const vendorContainer = document.getElementById('vendorNameContainer');
-            if (selectedStatus === 'vendorService') {
-                vendorContainer.classList.remove('d-none');
+            if (data.length === 0) {
+                html = `<tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada data punch yang ditemukan.</td></tr>`;
             } else {
-                vendorContainer.classList.add('d-none');
-            }
-        }
+                data.forEach((item, index) => {
+                    let cond = item.kondisi ? item.kondisi.trim().toLowerCase() : '';
+                    let badgeClass = 'bg-secondary';
+                    if (cond === 'ready') badgeClass = 'bg-success';
+                    else if (cond === 'repair') badgeClass = 'bg-warning text-dark';
+                    else if (cond === 'rusak') badgeClass = 'bg-danger';
 
-        // RENDER TABEL SERVIS VENDOR
-        function renderActiveVendorTable() {
-            const tbody = document.getElementById('activeVendorTableBody');
-            tbody.innerHTML = '';
+                    let tglPakai = item.tanggalPakai ? item.tanggalPakai.split('T')[0] : '-';
+                    let formattedCounter = !isNaN(item.counterPunch) ? Number(item.counterPunch).toLocaleString() : item.counterPunch;
 
-            const activeItems = punchInventory.filter(item => (Number(getProp(item, 'vendorService')) || 0) > 0);
-
-            if (activeItems.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted p-2">Tidak ada punch yang sedang diservis di vendor saat ini.</td></tr>`;
-                return;
-            }
-
-            activeItems.forEach(item => {
-                const id = getProp(item, 'id');
-                const code = getProp(item, 'code');
-                const size = getProp(item, 'size');
-                const thick = getProp(item, 'thickness');
-                const vendorCount = Number(getProp(item, 'vendorService')) || 0;
-                const activeVendor = getProp(item, 'activeVendorName') || 'Vendor Belum Dicatat';
-
-                let historyList = item.history || [];
-                if (typeof historyList === 'string') {
-                    try { historyList = JSON.parse(historyList); } catch(e) { historyList = []; }
-                }
-
-                const lastVendorLog = historyList.find(log => log.action && log.action.includes('KIRIM_VENDOR')) || {};
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="text-start fw-bold text-primary">${code}</td>
-                    <td>${size} cm / ${thick ? thick + ' mm' : '-'}</td>
-                    <td><span class="badge bg-purple-subtle" style="background:#f3e8ff; color:#7e22ce; font-size:0.85rem;"><i class="fa-solid fa-industry me-1"></i> ${activeVendor}</span></td>
-                    <td class="text-center fw-bold text-purple" style="color:#7e22ce;">${vendorCount} Pcs</td>
-                    <td class="small text-muted">${lastVendorLog.time ? '<strong>' + lastVendorLog.time + '</strong>: ' : ''}${lastVendorLog.notes || '-'}</td>
-                    <td class="text-center">
-                        <button onclick="openMutationModal('${id}')" class="btn btn-sm btn-success py-0 px-2 fs-7" title="Selesai Servis"><i class="fa-solid fa-check me-1"></i> Terima Kembali</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // RENDER TABEL MATRIX
-        function renderMatrixTable() {
-            const matrixBody = document.getElementById('matrixTableBody');
-            matrixBody.innerHTML = '';
-
-            if (punchInventory.length === 0) {
-                matrixBody.innerHTML = `<tr><td colspan="8" class="text-center p-2 text-muted">Belum ada data stok.</td></tr>`;
-                return;
-            }
-
-            const summaryMap = {};
-
-            punchInventory.forEach(item => {
-                const type = (String(getProp(item, 'type')) || 'UNKNOWN').toUpperCase();
-                const size = (String(getProp(item, 'size')) || 'N/A').toUpperCase();
-                const key = `${type}_${size}`;
-
-                if (!summaryMap[key]) {
-                    summaryMap[key] = { type: type, size: size, ready: 0, terpakai: 0, repair: 0, vendorService: 0, rusak: 0 };
-                }
-
-                summaryMap[key].ready += Number(getProp(item, 'ready')) || 0;
-                summaryMap[key].terpakai += Number(getProp(item, 'terpakai')) || 0;
-                summaryMap[key].repair += Number(getProp(item, 'repair')) || 0;
-                summaryMap[key].vendorService += Number(getProp(item, 'vendorService')) || 0;
-                summaryMap[key].rusak += Number(getProp(item, 'rusak')) || 0;
-            });
-
-            const sortedKeys = Object.keys(summaryMap).sort();
-
-            let grandTotalReady = 0, grandTotalPakai = 0, grandTotalRepair = 0, grandTotalVendor = 0, grandTotalRusak = 0;
-
-            sortedKeys.forEach(key => {
-                const row = summaryMap[key];
-                const totalPcs = row.ready + row.terpakai + row.repair + row.vendorService + row.rusak;
-
-                grandTotalReady += row.ready;
-                grandTotalPakai += row.terpakai;
-                grandTotalRepair += row.repair;
-                grandTotalVendor += row.vendorService;
-                grandTotalRusak += row.rusak;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="text-start"><span class="badge ${row.type === 'UPPER' ? 'bg-secondary' : 'bg-info'}">${row.type}</span></td>
-                    <td class="text-start fw-bold">${row.size} cm</td>
-                    <td class="text-success fw-bold">${row.ready}</td>
-                    <td class="text-primary fw-bold">${row.terpakai}</td>
-                    <td class="text-warning fw-bold">${row.repair}</td>
-                    <td style="color:#7e22ce;" class="fw-bold">${row.vendorService}</td>
-                    <td class="text-danger fw-bold">${row.rusak}</td>
-                    <td class="fw-bold bg-light">${totalPcs}</td>
-                `;
-                matrixBody.appendChild(tr);
-            });
-
-            const grandTotalPcs = grandTotalReady + grandTotalPakai + grandTotalRepair + grandTotalVendor + grandTotalRusak;
-            const trTotal = document.createElement('tr');
-            trTotal.className = "table-dark fw-bold";
-            trTotal.innerHTML = `
-                <td colspan="2" class="text-start">TOTAL KESELURUHAN</td>
-                <td>${grandTotalReady}</td>
-                <td>${grandTotalPakai}</td>
-                <td>${grandTotalRepair}</td>
-                <td>${grandTotalVendor}</td>
-                <td>${grandTotalRusak}</td>
-                <td>${grandTotalPcs}</td>
-            `;
-            matrixBody.appendChild(trTotal);
-        }
-
-        function resetAllFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('filterCondition').value = 'ALL';
-            document.getElementById('filterType').value = 'ALL';
-            renderTable();
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('punchTableBody');
-            const search = document.getElementById('searchInput').value.toLowerCase().trim();
-            const conditionFilter = document.getElementById('filterCondition').value;
-            const typeFilter = document.getElementById('filterType').value;
-
-            tbody.innerHTML = '';
-            let total = 0, ready = 0, terpakai = 0, repair = 0, vendor = 0, rusak = 0;
-
-            const filteredData = punchInventory.filter(item => {
-                const code = String(getProp(item, 'code'));
-                const itemVendor = String(getProp(item, 'vendor'));
-                const type = String(getProp(item, 'type'));
-                const size = String(getProp(item, 'size'));
-                const thickness = String(getProp(item, 'thickness'));
-                const rack = String(getProp(item, 'rackLocation'));
-
-                const r = Number(getProp(item, 'ready')) || 0;
-                const t = Number(getProp(item, 'terpakai')) || 0;
-                const rp = Number(getProp(item, 'repair')) || 0;
-                const v = Number(getProp(item, 'vendorService')) || 0;
-                const rsk = Number(getProp(item, 'rusak')) || 0;
-
-                ready += r; terpakai += t; repair += rp; vendor += v; rusak += rsk;
-
-                const matchSearch = !search || [code, itemVendor, size, thickness, rack].some(val => val.toLowerCase().includes(search));
-                const matchType = typeFilter === 'ALL' || type.toUpperCase() === typeFilter.toUpperCase();
-                
-                let matchCondition = true;
-                if (conditionFilter === 'Ready') matchCondition = r > 0;
-                if (conditionFilter === 'Terpakai') matchCondition = t > 0;
-                if (conditionFilter === 'Repair') matchCondition = rp > 0;
-                if (conditionFilter === 'Vendor') matchCondition = v > 0;
-                if (conditionFilter === 'Rusak') matchCondition = rsk > 0;
-
-                return matchSearch && matchType && matchCondition;
-            });
-
-            document.getElementById('stat-total').innerText = ready + terpakai + repair + vendor + rusak;
-            document.getElementById('stat-ready').innerText = ready;
-            document.getElementById('stat-terpakai').innerText = terpakai;
-            document.getElementById('stat-repair').innerText = repair;
-            document.getElementById('stat-vendor').innerText = vendor;
-            document.getElementById('stat-rusak').innerText = rusak;
-
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center p-3 text-muted">Tidak ada data ditemukan.</td></tr>`;
-                return;
-            }
-
-            filteredData.forEach(item => {
-                const id = getProp(item, 'id');
-                const r = Number(getProp(item, 'ready')) || 0;
-                const t = Number(getProp(item, 'terpakai')) || 0;
-                const rp = Number(getProp(item, 'repair')) || 0;
-                const v = Number(getProp(item, 'vendorService')) || 0;
-                const rsk = Number(getProp(item, 'rusak')) || 0;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="px-3 fw-bold">${getProp(item, 'code')}</td>
-                    <td><span class="badge bg-light text-dark border">${getProp(item, 'vendor')}</span></td>
-                    <td><span class="badge ${getProp(item, 'type') === 'UPPER' ? 'bg-secondary' : 'bg-info'}">${getProp(item, 'type')}</span></td>
-                    <td>${getProp(item, 'size')} cm</td>
-                    <td>${getProp(item, 'thickness') ? getProp(item, 'thickness') + ' mm' : '-'}</td>
-                    <td><small>${getProp(item, 'line') || '-'}</small> / <small class="fw-bold text-warning-emphasis">${getProp(item, 'rackLocation') || '-'}</small></td>
-                    <td class="text-center">
-                        <span class="badge bg-success-subtle text-success">${r} Rdy</span>
-                        <span class="badge bg-primary-subtle text-primary">${t} Pakai</span>
-                        <span class="badge bg-warning-subtle text-warning">${rp} Rpr Int</span>
-                        <span class="badge bg-purple-subtle text-purple" style="background:#f3e8ff; color:#7e22ce;">${v} Servis Vendor</span>
-                        <span class="badge bg-danger-subtle text-danger">${rsk} Rsk</span>
-                    </td>
-                    <td class="text-center fw-bold">${r + t + rp + v + rsk}</td>
-                    <td class="text-center">
-                        <button onclick="openMutationModal('${id}')" class="btn btn-sm btn-outline-primary" title="Mutasi / Servis Vendor"><i class="fa-solid fa-right-left"></i> Mutasi</button>
-                        <button onclick="openHistoryModal('${id}')" class="btn btn-sm btn-outline-info" title="Log"><i class="fa-solid fa-clock-rotate-left"></i></button>
-                        <button onclick="openModal('edit', '${id}')" class="btn btn-sm btn-outline-warning" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteItem('${id}')" class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function openModal(mode, id = null) {
-            const form = document.getElementById('punchForm');
-            form.reset();
-            document.getElementById('vendorNameContainer').classList.add('d-none');
-
-            if (mode === 'edit') {
-                const item = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
-                if (item) {
-                    document.getElementById('punchId').value = id;
-                    document.getElementById('formCode').value = getProp(item, 'code');
-                    document.getElementById('formVendor').value = getProp(item, 'vendor');
-                    document.getElementById('formType').value = getProp(item, 'type');
-                    document.getElementById('formSize').value = getProp(item, 'size');
-                    document.getElementById('formThickness').value = getProp(item, 'thickness');
-                    document.getElementById('formLine').value = getProp(item, 'line');
-                    document.getElementById('formRackLocation').value = getProp(item, 'rackLocation');
-
-                    // Cari status dominan yang sedang terisi
-                    const r = Number(getProp(item, 'ready')) || 0;
-                    const t = Number(getProp(item, 'terpakai')) || 0;
-                    const rp = Number(getProp(item, 'repair')) || 0;
-                    const v = Number(getProp(item, 'vendorService')) || 0;
-                    const rsk = Number(getProp(item, 'rusak')) || 0;
-
-                    if (v > 0) {
-                        document.getElementById('formSelectedStatus').value = 'vendorService';
-                        document.getElementById('formSelectedQty').value = v;
-                        document.getElementById('formActiveVendorName').value = getProp(item, 'activeVendorName') || '';
-                        document.getElementById('vendorNameContainer').classList.remove('d-none');
-                    } else if (t > 0) {
-                        document.getElementById('formSelectedStatus').value = 'terpakai';
-                        document.getElementById('formSelectedQty').value = t;
-                    } else if (rp > 0) {
-                        document.getElementById('formSelectedStatus').value = 'repair';
-                        document.getElementById('formSelectedQty').value = rp;
-                    } else if (rsk > 0) {
-                        document.getElementById('formSelectedStatus').value = 'rusak';
-                        document.getElementById('formSelectedQty').value = rsk;
-                    } else {
-                        document.getElementById('formSelectedStatus').value = 'ready';
-                        document.getElementById('formSelectedQty').value = r;
-                    }
-                }
-            } else {
-                document.getElementById('punchId').value = '';
-                document.getElementById('formSelectedStatus').value = 'ready';
-                document.getElementById('formSelectedQty').value = 1;
-            }
-            punchModalBS.show();
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('punchId').value;
-            const selectedStatus = document.getElementById('formSelectedStatus').value;
-            const selectedQty = Number(document.getElementById('formSelectedQty').value) || 0;
-            const activeVendor = document.getElementById('formActiveVendorName').value.trim();
-
-            // Set default semua status stok 0, lalu set status pilihan ke nilai selectedQty
-            let ready = 0, terpakai = 0, repair = 0, vendorService = 0, rusak = 0;
-            let activeVendorName = '';
-
-            if (selectedStatus === 'ready') ready = selectedQty;
-            else if (selectedStatus === 'terpakai') terpakai = selectedQty;
-            else if (selectedStatus === 'repair') repair = selectedQty;
-            else if (selectedStatus === 'vendorService') {
-                vendorService = selectedQty;
-                activeVendorName = activeVendor;
-                if (!activeVendorName) return alert("Harap isi Nama Vendor / Bengkel Servis!");
-            } else if (selectedStatus === 'rusak') rusak = selectedQty;
-
-            let existingHistory = [];
-            if (id) {
-                const existingItem = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
-                if (existingItem) existingHistory = existingItem.history || [];
-            }
-
-            const payload = {
-                id: id || 'PUNCH_' + Date.now(),
-                code: document.getElementById('formCode').value.trim(),
-                vendor: document.getElementById('formVendor').value.trim(),
-                type: document.getElementById('formType').value,
-                size: document.getElementById('formSize').value.trim(),
-                thickness: document.getElementById('formThickness').value.trim(),
-                line: document.getElementById('formLine').value.trim(),
-                rackLocation: document.getElementById('formRackLocation').value.trim(),
-                ready: ready,
-                terpakai: terpakai,
-                repair: repair,
-                vendorService: vendorService,
-                rusak: rusak,
-                activeVendorName: activeVendorName,
-                history: existingHistory
-            };
-            postToGoogleSheets("save", payload, () => punchModalBS.hide());
-        }
-
-        function openMutationModal(id) {
-            const item = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
-            if (!item) return;
-
-            document.getElementById('mutPunchId').value = id;
-            document.getElementById('mutNotes').value = '';
-            document.getElementById('mutVendorName').value = getProp(item, 'activeVendorName') || '';
-            document.getElementById('mutPunchInfo').innerHTML = `
-                <strong>${getProp(item, 'code')}</strong> | Ready: ${getProp(item, 'ready')} | Repair Int: ${getProp(item, 'repair')} | Servis Vendor: <strong>${getProp(item, 'vendorService') || 0}</strong>
-            `;
-            mutationModalBS.show();
-        }
-
-        function handleMutationSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('mutPunchId').value;
-            const action = document.getElementById('mutActionType').value;
-            const qty = Number(document.getElementById('mutQty').value) || 1;
-            const vendorName = document.getElementById('mutVendorName').value.trim();
-            const notes = document.getElementById('mutNotes').value.trim();
-
-            const item = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
-            if (!item) return;
-
-            let ready = Number(getProp(item, 'ready')) || 0;
-            let terpakai = Number(getProp(item, 'terpakai')) || 0;
-            let repair = Number(getProp(item, 'repair')) || 0;
-            let vendorService = Number(getProp(item, 'vendorService')) || 0;
-            let rusak = Number(getProp(item, 'rusak')) || 0;
-            let activeVendorName = getProp(item, 'activeVendorName') || '';
-
-            if (action === 'PASANG_MESIN') {
-                if (ready < qty) return alert("Stok Ready kurang!");
-                ready -= qty; terpakai += qty;
-            } else if (action === 'LEPAS_REPAIR') {
-                if (terpakai < qty) return alert("Stok Terpakai kurang!");
-                terpakai -= qty; repair += qty;
-            } else if (action === 'KIRIM_VENDOR') {
-                if (!vendorName) return alert("Harap isi Nama Vendor / Bengkel Servis!");
-                if (repair >= qty) repair -= qty;
-                else if (ready >= qty) ready -= qty;
-                else return alert("Stok Repair / Ready tidak cukup untuk dikirim ke vendor!");
-                vendorService += qty;
-                activeVendorName = vendorName;
-            } else if (action === 'KEMBALI_VENDOR') {
-                if (vendorService < qty) return alert("Jumlah melebihi stok yang sedang servis di vendor!");
-                vendorService -= qty; ready += qty;
-                if (vendorService === 0) activeVendorName = '';
-            } else if (action === 'FINISH_REPAIR') {
-                if (repair < qty) return alert("Stok Repair internal kurang!");
-                repair -= qty; ready += qty;
-            } else if (action === 'AFKIR_RUSAK') {
-                if (ready >= qty) ready -= qty;
-                else if (repair >= qty) repair -= qty;
-                else return alert("Stok tidak cukup!");
-                rusak += qty;
-            }
-
-            const now = new Date();
-            const timeStr = `${now.toLocaleDateString('id-ID')} ${now.toLocaleTimeString('id-ID')}`;
-            let historyList = item.history || [];
-            if (typeof historyList === 'string') {
-                try { historyList = JSON.parse(historyList); } catch(e) { historyList = []; }
-            }
-
-            historyList.unshift({
-                time: timeStr,
-                action: action + (vendorName ? ` (${vendorName})` : ''),
-                qty: qty,
-                notes: notes
-            });
-
-            const payload = { ...item, ready, terpakai, repair, vendorService, rusak, activeVendorName, history: historyList };
-            postToGoogleSheets("save", payload, () => mutationModalBS.hide());
-        }
-
-        function openHistoryModal(id) {
-            const item = punchInventory.find(p => String(getProp(p, 'id')) === String(id));
-            if (!item) return;
-
-            document.getElementById('historyModalTitle').innerText = `Log Mutasi: ${getProp(item, 'code')}`;
-            const tbody = document.getElementById('historyTableBody');
-            tbody.innerHTML = '';
-
-            let logs = item.history || [];
-            if (typeof logs === 'string') {
-                try { logs = JSON.parse(logs); } catch(e) { logs = []; }
-            }
-
-            if (logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center p-3 text-muted">Belum ada riwayat mutasi.</td></tr>`;
-            } else {
-                logs.forEach(log => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="p-2">${log.time}</td>
-                        <td><span class="badge bg-primary-subtle text-primary">${log.action}</span></td>
-                        <td class="text-center fw-bold">${log.qty || 1} Pcs</td>
-                        <td class="text-muted">${log.notes}</td>
+                    html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.size}</td>
+                            <td>${item.motifPolos}</td>
+                            <td><span class="badge ${badgeClass}">${item.kondisi}</span></td>
+                            <td>${formattedCounter}</td>
+                            <td>${tglPakai}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning text-white" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm btn-danger" title="Hapus"><i class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
                     `;
-                    tbody.appendChild(tr);
                 });
             }
-            historyModalBS.show();
+            tableBody.innerHTML = html;
         }
 
-        function deleteItem(id) {
-            if (confirm("Yakin ingin menghapus data matras ini?")) {
-                postToGoogleSheets("delete", { id: id });
+        // Hitung statistik kartu dashboard
+        function updateCounters(data) {
+            let total = data.length;
+            let ready = 0, repair = 0, rusak = 0;
+
+            data.forEach(item => {
+                let cond = item.kondisi ? item.kondisi.trim().toLowerCase() : '';
+                if (cond === 'ready') ready++;
+                else if (cond === 'repair') repair++;
+                else if (cond === 'rusak') rusak++;
+            });
+
+            document.getElementById('val-total').innerText = total;
+            document.getElementById('val-ready').innerText = ready;
+            document.getElementById('val-repair').innerText = repair;
+            document.getElementById('val-rusak').innerText = rusak;
+        }
+
+        // Fitur Search Bar Real-time
+        function filterTable() {
+            let keyword = document.getElementById('searchInput').value.toLowerCase();
+            let filteredData = allDataGlobal.filter(item => {
+                let size = String(item.size).toLowerCase();
+                let motif = String(item.motifPolos).toLowerCase();
+                let kondisi = String(item.kondisi).toLowerCase();
+                return size.includes(keyword) || motif.includes(keyword) || kondisi.includes(keyword);
+            });
+            renderTable(filteredData);
+        }
+
+        // Kirim data baru via AJAX
+        function submitData(event) {
+            event.preventDefault();
+            
+            const btnSimpan = document.getElementById('btnSimpan');
+            btnSimpan.disabled = true;
+            btnSimpan.innerHTML = "Menyimpan...";
+
+            const formData = new URLSearchParams(new FormData(document.getElementById('formPunch')));
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                redirect: 'follow'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    showToast("Data berhasil disimpan ke Google Sheets!", "success");
+                    document.getElementById('formPunch').reset();
+                    switchPage('dashboard');
+                } else {
+                    showToast("Gagal: " + data.message, "danger");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast("Terjadi kesalahan koneksi saat mengirim data.", "danger");
+            })
+            .finally(() => {
+                btnSimpan.disabled = false;
+                btnSimpan.innerHTML = "Simpan ke Google Sheets";
+            });
+        }
+
+        // Navigasi Tab / Halaman
+        function switchPage(page) {
+            const pageDashboard = document.getElementById('page-dashboard');
+            const pageForm = document.getElementById('page-form');
+            const navDashboard = document.getElementById('nav-dashboard');
+            const navForm = document.getElementById('nav-form');
+
+            if (page === 'dashboard') {
+                pageDashboard.classList.remove('d-none');
+                pageForm.classList.add('d-none');
+                navDashboard.classList.add('active');
+                navForm.classList.remove('active');
+                loadDashboardData();
+            } else if (page === 'form') {
+                pageForm.classList.remove('d-none');
+                pageDashboard.classList.add('d-none');
+                navForm.classList.add('active');
+                navDashboard.classList.remove('active');
             }
         }
     </script>
