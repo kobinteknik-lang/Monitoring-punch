@@ -177,6 +177,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link px-3 rounded text-white" id="nav-log" href="#" onclick="switchPage('log')">
+                            <i class="bi bi-clock-history me-1 text-warning"></i> Audit Trail / Log
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link px-3 rounded text-white" id="nav-form" href="#" onclick="resetAndOpenForm()">
                             <i class="bi bi-plus-circle-fill me-1 text-warning"></i> Input Punch Baru
                         </a>
@@ -188,8 +193,12 @@
 
     <div class="container-fluid px-4 my-4">
 
-        <!-- DASHBOARD & LIST -->
+        <!-- ==================== DASHBOARD & LIST ==================== -->
         <div id="page-dashboard" class="content-page">
+            
+            <!-- ALERT BANNER UNTUK LOW STOCK / OVER STROKE -->
+            <div id="alertBannerContainer" class="mb-4"></div>
+
             <div class="row g-3 mb-4">
                 <div class="col-12 col-xl-3">
                     <div class="card stat-card shadow-sm border-start border-primary border-4 h-100">
@@ -237,11 +246,15 @@
                 <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
                     <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-table text-primary me-2"></i> Daftar Status Punch Press & Rincian Stok</h5>
                     
-                    <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-end">
-                        <div class="input-group input-group-sm" style="max-width: 280px;">
+                    <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-end flex-wrap">
+                        <div class="input-group input-group-sm" style="max-width: 250px;">
                             <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
                             <input type="text" id="searchInput" class="form-control border-start-0 ps-0" placeholder="Cari merk, kode, size..." onkeyup="filterTable()">
                         </div>
+                        <!-- TOMBOL EKSPOR EXCEL -->
+                        <button class="btn btn-success btn-sm text-nowrap" onclick="exportToExcel()">
+                            <i class="bi bi-file-earmark-excel me-1"></i> Ekspor Excel
+                        </button>
                         <button class="btn btn-primary btn-sm text-nowrap" onclick="resetAndOpenForm()">
                             <i class="bi bi-plus-lg me-1"></i> Tambah
                         </button>
@@ -285,7 +298,36 @@
             </div>
         </div>
 
-        <!-- FORM INPUT / EDIT -->
+        <!-- ==================== HALAMAN 2: AUDIT TRAIL / RIWAYAT LOG ==================== -->
+        <div id="page-log" class="content-page d-none">
+            <div class="card shadow-sm">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-clock-history text-primary me-2"></i> Riwayat Aktivitas & Log Sistem (Audit Trail)</h5>
+                    <button class="btn btn-sm btn-outline-secondary px-3" onclick="switchPage('dashboard')">
+                        <i class="bi bi-arrow-left me-1"></i> Kembali ke Dashboard
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-nowrap">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-3">Waktu Log</th>
+                                    <th>Aktivitas</th>
+                                    <th>Detail / Deskripsi</th>
+                                    <th>Status Sistem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="log-table-body">
+                                <!-- Render log via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== HALAMAN 3: FORM INPUT / EDIT ==================== -->
         <div id="page-form" class="content-page d-none">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-7">
@@ -298,7 +340,6 @@
                         </div>
                         <div class="card-body p-4">
                             <form id="formPunch" onsubmit="submitData(event)">
-                                <!-- Hidden input untuk mode Edit (menyimpan nomor baris sheet) -->
                                 <input type="hidden" id="row_id" name="row_id" value="">
                                 <input type="hidden" id="action" name="action" value="create">
 
@@ -454,10 +495,11 @@
             }, 3500);
         }
 
-        // VARIABEL PAGINATION & DATA
+        // VARIABEL PAGINATION, DATA, & AUDIT LOG
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwb0f3-feXFqQ0nkjwO6qKHQXXqQke5WikM5s4uiNSxqd1-WhKkEGGaYseOpWyYeq1w/exec";
         let allDataGlobal = [];
         let filteredDataGlobal = [];
+        let auditLogs = [];
         let currentPage = 1;
         const rowsPerPage = 10;
 
@@ -465,6 +507,33 @@
             loadDashboardData();
             handleKondisiChange();
         };
+
+        function addAuditLog(activity, detail, status = 'Sukses') {
+            let timeStr = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' });
+            auditLogs.unshift({ time: timeStr, activity: activity, detail: detail, status: status });
+            if (auditLogs.length > 50) auditLogs.pop(); // Batasi maksimal 50 log terakhir
+            renderAuditLogTable();
+        }
+
+        function renderAuditLogTable() {
+            let tbody = document.getElementById('log-table-body');
+            if (auditLogs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">Belum ada aktivitas tercatat pada sesi ini.</td></tr>`;
+                return;
+            }
+            let html = '';
+            auditLogs.forEach(log => {
+                html += `
+                    <tr>
+                        <td class="ps-3 text-muted small">${log.time}</td>
+                        <td><span class="fw-semibold text-dark">${log.activity}</span></td>
+                        <td>${log.detail}</td>
+                        <td><span class="badge bg-success bg-opacity-10 text-success border border-success">${log.status}</span></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
 
         function handlePosisiChange() {
             const posisi = document.getElementById('posisi').value;
@@ -529,6 +598,7 @@
                     renderTable();
                     renderPagination();
                     updateDashboardSummary(allDataGlobal);
+                    checkEarlyWarnings(allDataGlobal);
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -537,7 +607,47 @@
                 });
         }
 
-        // RENDER TABEL DENGAN TOMBOL EDIT & DELETE (CRUD LENGKAP)
+        // FITUR PERINGATAN DINI (LOW STOCK & OVER STROKE ALERT)
+        function checkEarlyWarnings(data) {
+            let alertContainer = document.getElementById('alertBannerContainer');
+            let warnings = [];
+            let readyCount = 0;
+
+            data.forEach(item => {
+                let kondisi = String(item.kondisi || '').trim().toLowerCase();
+                let stroke = Number(item.counterPunch) || 0;
+                let pcs = Number(item.jumlahPcs) || 1;
+
+                if (kondisi === 'ready' || kondisi === 'baru') {
+                    readyCount += pcs;
+                }
+
+                // Peringatan Over Stroke (Misal > 50.000 pukulan perlu perhatian khusus)
+                if (stroke > 50000) {
+                    warnings.push(`Punch <b>${item.kodePunch}</b> (${item.mesin}) mencapai <b>${stroke.toLocaleString()} Stroke</b> (Perlu Inspeksi/Repair).`);
+                }
+            });
+
+            // Peringatan Low Stock (Jika total stok ready < 3 pcs)
+            if (readyCount < 3) {
+                warnings.push(`Stok Siap Pakai (Ready) menipis! Total sisa: <b>${readyCount} Pcs</b>.`);
+            }
+
+            if (warnings.length > 0) {
+                let html = `<div class="alert alert-warning border-0 shadow-sm d-flex align-items-center gap-3" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
+                    <div>
+                        <h6 class="fw-bold mb-1">Peringatan Dini Sistem Maintenance (Low Stock / Over Stroke):</h6>
+                        <ul class="mb-0 ps-3 small">`;
+                warnings.forEach(w => html += `<li>${w}</li>`);
+                html += `</ul></div></div>`;
+                alertContainer.innerHTML = html;
+            } else {
+                alertContainer.innerHTML = '';
+            }
+        }
+
+        // RENDER TABEL DENGAN CRUD
         function renderTable() {
             const tableBody = document.getElementById('table-body');
             let html = '';
@@ -567,7 +677,6 @@
                 let jumlahPcs = item.jumlahPcs ? `${item.jumlahPcs} Pcs` : '1 Pcs';
                 let detailTipe = String(item.posisi) === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif && item.kodeMotif !== '-' ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
 
-                // Simpan data item dalam bentuk JSON string aman untuk parameter fungsi edit
                 let itemJson = encodeURIComponent(JSON.stringify(item));
 
                 html += `
@@ -584,7 +693,7 @@
                         <td>${tglPakai}</td>
                         <td class="text-end pe-3">
                             <button class="btn btn-sm btn-light text-primary border me-1" title="Edit" onclick="editData('${itemJson}')"><i class="bi bi-pencil-square"></i></button>
-                            <button class="btn btn-sm btn-light text-danger border" title="Hapus" onclick="deleteData(${item.row})"><i class="bi bi-trash"></i></button>
+                            <button class="btn btn-sm btn-light text-danger border" title="Hapus" onclick="deleteData(${item.row}, '${item.kodePunch}')"><i class="bi bi-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -594,6 +703,45 @@
             let displayEnd = Math.min(end, filteredDataGlobal.length);
             document.getElementById('paginationInfo').innerText = `Menampilkan ${start + 1} - ${displayEnd} dari ${filteredDataGlobal.length} data`;
             renderPagination();
+        }
+
+        // FITUR EKSPOR KE EXCEL / CSV (.xls)
+        function exportToExcel() {
+            if (allDataGlobal.length === 0) {
+                showNotification("Ekspor Gagal", "Tidak ada data untuk diekspor.", "warning");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "No,Merk Mesin Press,Kode Punch,Posisi,Tipe,Kode Motif,Size Ubin,Kondisi,Jumlah Pcs,Counter Stroke,Tanggal Pakai\n";
+
+            allDataGlobal.forEach((item, index) => {
+                let row = [
+                    index + 1,
+                    `"${item.mesin || ''}"`,
+                    `"${item.kodePunch || ''}"`,
+                    `"${item.posisi || ''}"`,
+                    `"${item.tipeBawah || ''}"`,
+                    `"${item.kodeMotif || ''}"`,
+                    `"${item.size || ''}"`,
+                    `"${item.kondisi || ''}"`,
+                    item.jumlahPcs || 1,
+                    item.counterPunch || 0,
+                    `"${item.tanggalPakai ? String(item.tanggalPakai).split('T')[0] : ''}"`
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekap_Punch_Kobin_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            addAuditLog("Ekspor Data", "Mengunduh rekapitulasi data punch ke format Excel/CSV");
+            showNotification("Berhasil Ekspor", "File laporan berhasil diunduh.", "success");
         }
 
         function renderPagination() {
@@ -695,7 +843,6 @@
             renderTable();
         }
 
-        // BUKA FORM DALAM MODE TAMBAH BARU
         function resetAndOpenForm() {
             document.getElementById('formPunch').reset();
             document.getElementById('row_id').value = "";
@@ -707,7 +854,6 @@
             switchPage('form');
         }
 
-        // BUKA FORM DALAM MODE EDIT
         function editData(encodedItem) {
             let item = JSON.parse(decodeURIComponent(encodedItem));
 
@@ -745,9 +891,8 @@
             switchPage('form');
         }
 
-        // HAPUS DATA
-        function deleteData(rowNum) {
-            if (!confirm(`Apakah Anda yakin ingin menghapus data pada baris #${rowNum}?`)) return;
+        function deleteData(rowNum, kode) {
+            if (!confirm(`Apakah Anda yakin ingin menghapus punch dengan kode [${kode}]?`)) return;
 
             showNotification("Menghapus...", "Sedang menghapus data dari server...", "warning");
 
@@ -764,6 +909,7 @@
             .then(data => {
                 if (data.status === "success") {
                     showNotification("Berhasil Dihapus", "Data punch berhasil dihapus.", "success");
+                    addAuditLog("Hapus Data", `Menghapus punch [${kode}] dari baris #${rowNum}`, "Terhapus");
                     loadDashboardData();
                 } else {
                     showNotification("Gagal", data.message, "danger");
@@ -775,13 +921,14 @@
             });
         }
 
-        // SUBMIT FORM (CREATE ATAU UPDATE)
         function submitData(event) {
             event.preventDefault();
             const btnSimpan = document.getElementById('btnSimpan');
             btnSimpan.disabled = true;
             btnSimpan.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...`;
 
+            let actionType = document.getElementById('action').value;
+            let kodeVal = document.getElementById('kode_punch').value;
             const formData = new URLSearchParams(new FormData(document.getElementById('formPunch')));
 
             fetch(SCRIPT_URL, {
@@ -793,6 +940,7 @@
             .then(data => {
                 if (data.status === "success") {
                     showNotification("Berhasil!", data.message, "success");
+                    addAuditLog(actionType === 'update' ? "Perbarui Data" : "Tambah Data Baru", `Menyimpan data punch [${kodeVal}]`);
                     document.getElementById('formPunch').reset();
                     switchPage('dashboard');
                 } else {
@@ -811,21 +959,30 @@
 
         function switchPage(page) {
             const pageDashboard = document.getElementById('page-dashboard');
+            const pageLog = document.getElementById('page-log');
             const pageForm = document.getElementById('page-form');
             const navDashboard = document.getElementById('nav-dashboard');
+            const navLog = document.getElementById('nav-log');
             const navForm = document.getElementById('nav-form');
+
+            // Sembunyikan semua
+            pageDashboard.classList.add('d-none');
+            pageLog.classList.add('d-none');
+            pageForm.classList.add('d-none');
+            navDashboard.classList.remove('active');
+            navLog.classList.remove('active');
+            navForm.classList.remove('active');
 
             if (page === 'dashboard') {
                 pageDashboard.classList.remove('d-none');
-                pageForm.classList.add('d-none');
                 navDashboard.classList.add('active');
-                navForm.classList.remove('active');
                 loadDashboardData();
+            } else if (page === 'log') {
+                pageLog.classList.remove('d-none');
+                navLog.classList.add('active');
             } else if (page === 'form') {
                 pageForm.classList.remove('d-none');
-                pageDashboard.classList.add('d-none');
                 navForm.classList.add('active');
-                navDashboard.classList.remove('active');
             }
         }
     </script>
