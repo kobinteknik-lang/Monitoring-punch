@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Punch Maintenance - PT. Kobin Keramik Industri</title>
+    <title>Punch Maintenance Pro - PT. Kobin Keramik Industri</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -17,12 +17,10 @@
             background-color: #f4f6f9;
             color: #333;
         }
-        /* Custom Navbar Estetik */
         .navbar-custom {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             border-bottom: 3px solid #3b82f6;
         }
-        /* Styling Kartu Statistik */
         .stat-card {
             border: none;
             border-radius: 12px;
@@ -32,7 +30,6 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.08)!important;
         }
-        /* Styling Card Konten */
         .card {
             border: none;
             border-radius: 12px;
@@ -43,7 +40,6 @@
             border-top-left-radius: 12px !important;
             border-top-right-radius: 12px !important;
         }
-        /* Form Control Styling */
         .form-control, .form-select {
             border-radius: 8px;
             padding: 10px 14px;
@@ -53,19 +49,16 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
             border-color: #3b82f6;
         }
-        /* Tombol Modern */
         .btn {
             border-radius: 8px;
             padding: 9px 18px;
             font-weight: 500;
         }
-        /* Tabel Responsif */
         .table th {
             font-weight: 600;
             color: #475569;
             background-color: #f8fafc !important;
         }
-        /* Animasi Transisi Halaman */
         .content-page {
             animation: fadeIn 0.3s ease-in-out;
         }
@@ -109,46 +102,41 @@
         <!-- ==================== HALAMAN 1: DASHBOARD & LIST ==================== -->
         <div id="page-dashboard" class="content-page">
             
-            <!-- Cards Statistik Grid yang Fleksibel (Autosize untuk HP & Desktop) -->
+            <!-- SECTION 1: DASHBOARD RINGKASAN UTAMA -->
             <div class="row g-3 mb-4">
-                <div class="col-6 col-xl-3">
-                    <div class="card stat-card bg-white shadow-sm border-start border-primary border-4">
+                <div class="col-12 col-md-4">
+                    <div class="card stat-card bg-white shadow-sm border-start border-primary border-4 h-100">
                         <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Total Punch</span>
-                            <h2 class="fw-bold mb-0 text-primary mt-1" id="val-total">0</h2>
+                            <span class="text-muted small fw-semibold text-uppercase">Total Stok Pcs</span>
+                            <h2 class="fw-bold mb-0 text-primary mt-1" id="val-total-pcs">0 Pcs</h2>
+                            <small class="text-muted" id="val-total-jenis">0 Jenis Item terdaftar</small>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-xl-3">
-                    <div class="card stat-card bg-white shadow-sm border-start border-success border-4">
+                <div class="col-12 col-md-4">
+                    <div class="card stat-card bg-white shadow-sm border-start border-success border-4 h-100">
                         <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Ready</span>
-                            <h2 class="fw-bold mb-0 text-success mt-1" id="val-ready">0</h2>
+                            <span class="text-muted small fw-semibold text-uppercase">Total Punch Polos</span>
+                            <h2 class="fw-bold mb-0 text-success mt-1" id="val-polos-pcs">0 Pcs</h2>
+                            <div class="mt-2 small text-secondary" id="detail-polos-size">Memuat ukuran...</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-xl-3">
-                    <div class="card stat-card bg-white shadow-sm border-start border-warning border-4">
+                <div class="col-12 col-md-4">
+                    <div class="card stat-card bg-white shadow-sm border-start border-info border-4 h-100">
                         <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Repair</span>
-                            <h2 class="fw-bold mb-0 text-warning mt-1" id="val-repair">0</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 col-xl-3">
-                    <div class="card stat-card bg-white shadow-sm border-start border-danger border-4">
-                        <div class="card-body">
-                            <span class="text-muted small fw-semibold text-uppercase">Rusak</span>
-                            <h2 class="fw-bold mb-0 text-danger mt-1" id="val-rusak">0</h2>
+                            <span class="text-muted small fw-semibold text-uppercase">Total Punch Motif</span>
+                            <h2 class="fw-bold mb-0 text-info mt-1" id="val-motif-pcs">0 Pcs</h2>
+                            <div class="mt-2 small text-secondary" id="detail-motif-size">Memuat ukuran...</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Tabel Data -->
+            <!-- SECTION 2: TABEL LIST PUNCH DI BAWAH DASHBOARD -->
             <div class="card shadow-sm">
                 <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-table text-primary me-2"></i> Daftar Status Punch Press</h5>
+                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-table text-primary me-2"></i> Daftar Status Punch Press & Rincian Stok</h5>
                     
                     <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-end">
                         <div class="input-group input-group-sm" style="max-width: 280px;">
@@ -172,6 +160,7 @@
                                     <th>Tipe & Motif</th>
                                     <th>Size Ubin</th>
                                     <th>Kondisi</th>
+                                    <th>Jumlah Pcs</th>
                                     <th>Counter Stroke</th>
                                     <th>Tgl Pakai</th>
                                     <th class="text-end pe-3">Aksi</th>
@@ -179,7 +168,7 @@
                             </thead>
                             <tbody id="table-body">
                                 <tr>
-                                    <td colspan="10" class="text-center py-5 text-muted">
+                                    <td colspan="11" class="text-center py-5 text-muted">
                                         <div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data dari Google Sheets...
                                     </td>
                                 </tr>
@@ -205,7 +194,6 @@
                             <form id="formPunch" onsubmit="submitData(event)">
                                 
                                 <div class="row g-3">
-                                    <!-- Merk Mesin Press (Ganti No. Mesin) -->
                                     <div class="col-md-6">
                                         <label for="mesin" class="form-label fw-semibold small text-secondary">Merk Mesin Press</label>
                                         <input type="text" class="form-control" id="mesin" name="mesin" placeholder="Contoh: SACMI / Siti / Welko" required>
@@ -217,7 +205,6 @@
                                 </div>
 
                                 <div class="row g-3 mt-1">
-                                    <!-- Posisi Punch (Menentukan Logika Tampil Field Lain) -->
                                     <div class="col-md-6">
                                         <label for="posisi" class="form-label fw-semibold small text-secondary">Posisi Punch</label>
                                         <select class="form-select" id="posisi" name="posisi" onchange="handlePosisiChange()" required>
@@ -250,21 +237,29 @@
                                 <div class="row g-3 mt-1">
                                     <div class="col-md-6">
                                         <label for="kondisi" class="form-label fw-semibold small text-secondary">Kondisi</label>
-                                        <select class="form-select" id="kondisi" name="kondisi" required>
+                                        <select class="form-select" id="kondisi" name="kondisi" onchange="handleKondisiChange()" required>
                                             <option value="" selected disabled>Pilih Kondisi...</option>
+                                            <option value="Baru">Baru</option>
                                             <option value="Ready">Ready</option>
                                             <option value="Repair">Repair</option>
                                             <option value="Rusak">Rusak</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
+                                        <label for="jumlah_pcs" class="form-label fw-semibold small text-secondary">Jumlah (Pcs)</label>
+                                        <input type="number" class="form-control" id="jumlah_pcs" name="jumlah_pcs" min="1" value="1" placeholder="Contoh: 2" required>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1" id="counterRow">
+                                    <div class="col-md-12" id="counterContainer">
                                         <label for="counter_punch" class="form-label fw-semibold small text-secondary">Counter Stroke / Pukulan</label>
-                                        <input type="number" class="form-control" id="counter_punch" name="counter_punch" placeholder="Contoh: 15000" required>
+                                        <input type="number" class="form-control" id="counter_punch" name="counter_punch" placeholder="Contoh: 15000">
                                     </div>
                                 </div>
 
                                 <div class="mt-3">
-                                    <label for="tanggal_pakai" class="form-label fw-semibold small text-secondary">Tanggal Terakhir Pakai / Maintenance</label>
+                                    <label for="tanggal_pakai" class="form-label fw-semibold small text-secondary">Tanggal Terakhir Pakai / Masuk</label>
                                     <input type="date" class="form-control" id="tanggal_pakai" name="tanggal_pakai" required>
                                 </div>
 
@@ -282,7 +277,7 @@
 
     </div>
 
-    <!-- Toast Notification Modern -->
+    <!-- Toast Notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="liveToast" class="toast align-items-center text-white border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
@@ -301,9 +296,9 @@
 
         window.onload = function() {
             loadDashboardData();
+            handleKondisiChange();
         };
 
-        // Logika Dinamis Form Berdasarkan Posisi
         function handlePosisiChange() {
             const posisi = document.getElementById('posisi').value;
             const lowerContainer = document.getElementById('lowerOptionsContainer');
@@ -320,7 +315,6 @@
             }
         }
 
-        // Logika Dinamis Tipe Motif (Lower)
         function handleTipeChange() {
             const tipe = document.getElementById('tipe_bawah').value;
             const kodeMotifContainer = document.getElementById('kodeMotifContainer');
@@ -336,6 +330,22 @@
             }
         }
 
+        function handleKondisiChange() {
+            const kondisi = document.getElementById('kondisi').value;
+            const counterContainer = document.getElementById('counterContainer');
+            const counterInput = document.getElementById('counter_punch');
+
+            if (kondisi === 'Baru') {
+                counterContainer.classList.add('d-none');
+                counterInput.required = false;
+                counterInput.value = '0';
+            } else {
+                counterContainer.classList.remove('d-none');
+                counterInput.required = true;
+                if(counterInput.value === '0') counterInput.value = '';
+            }
+        }
+
         function showToast(message, type = 'success') {
             const toastEl = document.getElementById('liveToast');
             const toastMsg = document.getElementById('toastMessage');
@@ -346,18 +356,18 @@
 
         function loadDashboardData() {
             const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = `<tr><td colspan="10" class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data...</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="11" class="text-center py-5 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data...</td></tr>`;
 
             fetch(SCRIPT_URL)
                 .then(response => response.json())
                 .then(data => {
                     allDataGlobal = data;
                     renderTable(allDataGlobal);
-                    updateCounters(allDataGlobal);
+                    updateDashboardSummary(allDataGlobal);
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    tableBody.innerHTML = `<tr><td colspan="10" class="text-center py-5 text-danger">Gagal memuat data. Periksa URL Web App.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="11" class="text-center py-5 text-danger">Gagal memuat data. Periksa URL Web App.</td></tr>`;
                 });
         }
 
@@ -366,7 +376,7 @@
             let html = '';
 
             if (data.length === 0) {
-                html = `<tr><td colspan="10" class="text-center py-5 text-muted">Belum ada data punch tersimpan.</td></tr>`;
+                html = `<tr><td colspan="11" class="text-center py-5 text-muted">Belum ada data punch tersimpan.</td></tr>`;
             } else {
                 data.forEach((item, index) => {
                     let cond = item.kondisi ? item.kondisi.trim().toLowerCase() : '';
@@ -374,11 +384,13 @@
                     if (cond === 'ready') badgeClass = 'bg-success bg-opacity-10 text-success border border-success';
                     else if (cond === 'repair') badgeClass = 'bg-warning bg-opacity-10 text-warning text-dark border border-warning';
                     else if (cond === 'rusak') badgeClass = 'bg-danger bg-opacity-10 text-danger border border-danger';
+                    else if (cond === 'baru') badgeClass = 'bg-info bg-opacity-10 text-info text-dark border border-info';
 
                     let tglPakai = item.tanggalPakai ? item.tanggalPakai.split('T')[0] : '-';
-                    let formattedCounter = !isNaN(item.counterPunch) ? Number(item.counterPunch).toLocaleString() : item.counterPunch;
+                    let formattedCounter = (!isNaN(item.counterPunch) && item.counterPunch > 0) ? Number(item.counterPunch).toLocaleString() : '- (Baru)';
+                    let jumlahPcs = item.jumlahPcs ? `${item.jumlahPcs} Pcs` : '1 Pcs';
                     
-                    let detailTipe = item.posisi === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
+                    let detailTipe = item.posisi === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif && item.kodeMotif !== '-' ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
 
                     html += `
                         <tr>
@@ -389,6 +401,7 @@
                             <td>${detailTipe}</td>
                             <td>${item.size}</td>
                             <td><span class="badge ${badgeClass} px-2 py-1">${item.kondisi}</span></td>
+                            <td><span class="fw-bold text-primary">${jumlahPcs}</span></td>
                             <td>${formattedCounter}</td>
                             <td>${tglPakai}</td>
                             <td class="text-end pe-3">
@@ -402,21 +415,55 @@
             tableBody.innerHTML = html;
         }
 
-        function updateCounters(data) {
-            let total = data.length;
-            let ready = 0, repair = 0, rusak = 0;
+        // Fungsi Kalkulasi & Pemisahan Dashboard Polos vs Motif + Per Ukuran
+        function updateDashboardSummary(data) {
+            let totalPcs = 0;
+            let totalJenis = data.length;
+
+            let polosPcs = 0;
+            let motifPcs = 0;
+
+            let polosBySize = {}; // Objek untuk rekap ukuran Polos
+            let motifBySize = {}; // Objek untuk rekap ukuran Motif
 
             data.forEach(item => {
-                let cond = item.kondisi ? item.kondisi.trim().toLowerCase() : '';
-                if (cond === 'ready') ready++;
-                else if (cond === 'repair') repair++;
-                else if (cond === 'rusak') rusak++;
+                let pcs = Number(item.jumlahPcs) || 1;
+                totalPcs += pcs;
+
+                let tipe = (item.tipeBawah || 'Polos').trim().toLowerCase();
+                let size = (item.size || 'Unknown').trim();
+                let posisi = (item.posisi || '').trim();
+
+                // Jika posisi Upper, otomatis dikategorikan Polos
+                if (posisi === 'Upper' || tipe === 'polos') {
+                    polosPcs += pcs;
+                    polosBySize[size] = (polosBySize[size] || 0) + pcs;
+                } else {
+                    motifPcs += pcs;
+                    motifBySize[size] = (motifBySize[size] || 0) + pcs;
+                }
             });
 
-            document.getElementById('val-total').innerText = total;
-            document.getElementById('val-ready').innerText = ready;
-            document.getElementById('val-repair').innerText = repair;
-            document.getElementById('val-rusak').innerText = rusak;
+            // Render ke Kartu Utama
+            document.getElementById('val-total-pcs').innerText = `${totalPcs.toLocaleString()} Pcs`;
+            document.getElementById('val-total-jenis').innerText = `${totalJenis} Jenis Item tercatat`;
+
+            document.getElementById('val-polos-pcs').innerText = `${polosPcs.toLocaleString()} Pcs`;
+            document.getElementById('val-motif-pcs').innerText = `${motifPcs.toLocaleString()} Pcs`;
+
+            // Render Rincian Ukuran Polos
+            let polosHtml = '';
+            for (let [size, count] of Object.entries(polosBySize)) {
+                polosHtml += `<span class="badge bg-success bg-opacity-10 text-success border border-success me-1 mb-1">${size}: ${count} Pcs</span>`;
+            }
+            document.getElementById('detail-polos-size').innerHTML = polosHtml || '<span class="text-muted">Belum ada data</span>';
+
+            // Render Rincian Ukuran Motif
+            let motifHtml = '';
+            for (let [size, count] of Object.entries(motifBySize)) {
+                motifHtml += `<span class="badge bg-info bg-opacity-10 text-info text-dark border border-info me-1 mb-1">${size}: ${count} Pcs</span>`;
+            }
+            document.getElementById('detail-motif-size').innerHTML = motifHtml || '<span class="text-muted">Belum ada data</span>';
         }
 
         function filterTable() {
@@ -425,7 +472,8 @@
                 let mesin = String(item.mesin || '').toLowerCase();
                 let kode = String(item.kodePunch || '').toLowerCase();
                 let size = String(item.size || '').toLowerCase();
-                return mesin.includes(keyword) || kode.includes(keyword) || size.includes(keyword);
+                let tipe = String(item.tipeBawah || '').toLowerCase();
+                return mesin.includes(keyword) || kode.includes(keyword) || size.includes(keyword) || tipe.includes(keyword);
             });
             renderTable(filteredData);
         }
@@ -449,6 +497,7 @@
                     showToast("Data punch berhasil disimpan!", "success");
                     document.getElementById('formPunch').reset();
                     handlePosisiChange();
+                    handleKondisiChange();
                     switchPage('dashboard');
                 } else {
                     showToast("Gagal: " + data.message, "danger");
