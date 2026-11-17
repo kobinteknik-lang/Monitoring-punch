@@ -632,10 +632,12 @@
             data.forEach(item => {
                 let pcs = Number(item.jumlahPcs) || 1;
                 totalPcs += pcs;
-                let tipe = (item.tipeBawah || 'Polos').trim().toLowerCase();
-                let size = (item.size || 'Unknown').trim();
-                let posisi = (item.posisi || '').trim();
-                let kondisi = (item.kondisi || '').trim().toLowerCase();
+                let tipe = String(item.tipeBawah || 'Polos').trim().toLowerCase();
+                
+                // AMAN: Dibungkus String() agar jika nilainya angka tidak error .trim()
+                let size = String(item.size || 'Unknown').trim();
+                let posisi = String(item.posisi || '').trim();
+                let kondisi = String(item.kondisi || '').trim().toLowerCase();
 
                 if (kondisi === 'baru') countBaru += pcs;
                 else if (kondisi === 'ready') countReady += pcs;
@@ -673,7 +675,7 @@
             }
             document.getElementById('detail-motif-size').innerHTML = motifHtml || '<span class="text-muted">Belum ada data</span>';
         }
-
+        
         function filterTable() {
             let keyword = document.getElementById('searchInput').value.toLowerCase();
             filteredDataGlobal = allDataGlobal.filter(item => {
