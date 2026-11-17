@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Data Punch - Pro</title>
-    <!-- Bootstrap 5 CSS CDN -->
+    <title>Manajemen Punch - Keramik</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -14,7 +14,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-tools"></i> Punch Management</a>
+            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-gear-fill"></i> Maintenance Punch Keramik</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -76,19 +76,17 @@
                 </div>
             </div>
 
-            <!-- Tabel List & Search Bar -->
+            <!-- Tabel List & Search -->
             <div class="card shadow-sm">
                 <div class="card-header bg-white py-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-list-task"></i> Daftar List Punch</h5>
-                    
-                    <!-- Search Bar & Tombol Tambah -->
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-list-task"></i> Status Punch Press</h5>
                     <div class="d-flex align-items-center gap-2 w-100 w-md-auto justify-content-end">
                         <div class="input-group input-group-sm" style="max-width: 250px;">
                             <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-                            <input type="text" id="searchInput" class="form-control" placeholder="Cari size / motif..." onkeyup="filterTable()">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Cari mesin / size..." onkeyup="filterTable()">
                         </div>
                         <button class="btn btn-primary btn-sm text-nowrap" onclick="switchPage('form')">
-                            <i class="bi bi-plus"></i> Tambah
+                            <i class="bi bi-plus"></i> Tambah Punch
                         </button>
                     </div>
                 </div>
@@ -98,17 +96,20 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>Size</th>
-                                    <th>Motif / Polos</th>
+                                    <th>Mesin Press</th>
+                                    <th>Kode / ID</th>
+                                    <th>Posisi</th>
+                                    <th>Tipe / Motif</th>
+                                    <th>Size Ubin</th>
                                     <th>Kondisi</th>
-                                    <th>Counter Punch</th>
-                                    <th>Tanggal Terakhir Pakai</th>
+                                    <th>Counter Stroke</th>
+                                    <th>Tgl Pakai</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body">
                                 <tr>
-                                    <td colspan="7" class="text-center py-4 text-muted">Memuat data dari Google Sheets...</td>
+                                    <td colspan="10" class="text-center py-4 text-muted">Memuat data dari Google Sheets...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -120,10 +121,10 @@
         <!-- HALAMAN 2: FORM INPUT -->
         <div id="page-form" class="content-page d-none">
             <div class="row justify-content-center">
-                <div class="col-md-7">
+                <div class="col-md-8">
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="bi bi-file-earmark-plus"></i> Form Input Punch</h5>
+                            <h5 class="mb-0"><i class="bi bi-file-earmark-plus"></i> Form Input / Update Punch Keramik</h5>
                             <button class="btn btn-sm btn-light text-primary fw-bold" onclick="switchPage('dashboard')">
                                 <i class="bi bi-arrow-left"></i> Kembali
                             </button>
@@ -131,37 +132,66 @@
                         <div class="card-body">
                             <form id="formPunch" onsubmit="submitData(event)">
                                 
-                                <div class="mb-3">
-                                    <label for="size" class="form-label">Size</label>
-                                    <input type="text" class="form-control" id="size" name="size" placeholder="Contoh: 10mm / M12" required>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="mesin" class="form-label">No. Mesin / Line Press</label>
+                                        <input type="text" class="form-control" id="mesin" name="mesin" placeholder="Contoh: Press Line 01" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kode_punch" class="form-label">Kode / ID Punch</label>
+                                        <input type="text" class="form-control" id="kode_punch" name="kode_punch" placeholder="Contoh: PCH-6060-A" required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- 1. POSISI (Upper / Lower) DI ATAS AGAR MENENTUKAN FIELD SELANJUTNYA -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="posisi" class="form-label">Posisi Punch</label>
+                                        <select class="form-select" id="posisi" name="posisi" onchange="handlePosisiChange()" required>
+                                            <option value="" selected disabled>Pilih Posisi...</option>
+                                            <option value="Upper">Upper (Atas)</option>
+                                            <option value="Lower">Lower (Bawah)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="size" class="form-label">Size Ubin</label>
+                                        <input type="text" class="form-control" id="size" name="size" placeholder="Contoh: 60x60 / 40x40" required>
+                                    </div>
+                                </div>
+
+                                <!-- CONTAINER KHUSUS LOWER (Hanya muncul jika pilih Lower) -->
+                                <div id="lowerOptionsContainer" class="row d-none bg-light p-3 rounded mb-3 border">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tipe_bawah" class="form-label">Tipe (Polos / Motif)</label>
+                                        <select class="form-select" id="tipe_bawah" name="tipe_bawah" onchange="handleTipeChange()">
+                                            <option value="Polos" selected>Polos</option>
+                                            <option value="Motif">Motif</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3 d-none" id="kodeMotifContainer">
+                                        <label for="kode_motif" class="form-label">Kode Motif</label>
+                                        <input type="text" class="form-control" id="kode_motif" name="kode_motif" placeholder="Masukkan kode motif ubin...">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="kondisi" class="form-label">Kondisi</label>
+                                        <select class="form-select" id="kondisi" name="kondisi" required>
+                                            <option value="" selected disabled>Pilih Kondisi...</option>
+                                            <option value="Ready">Ready</option>
+                                            <option value="Repair">Repair</option>
+                                            <option value="Rusak">Rusak</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="counter_punch" class="form-label">Counter Stroke / Pukulan</label>
+                                        <input type="number" class="form-control" id="counter_punch" name="counter_punch" placeholder="Contoh: 15000" required>
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="motif_polos" class="form-label">Motif / Polos</label>
-                                    <select class="form-select" id="motif_polos" name="motif_polos" required>
-                                        <option value="" selected disabled>Pilih Tipe...</option>
-                                        <option value="Polos">Polos</option>
-                                        <option value="Motif">Motif</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="kondisi" class="form-label">Kondisi</label>
-                                    <select class="form-select" id="kondisi" name="kondisi" required>
-                                        <option value="" selected disabled>Pilih Kondisi...</option>
-                                        <option value="Ready">Ready</option>
-                                        <option value="Repair">Repair</option>
-                                        <option value="Rusak">Rusak</option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="counter_punch" class="form-label">Counter Punch</label>
-                                    <input type="number" class="form-control" id="counter_punch" name="counter_punch" placeholder="Masukkan jumlah counter" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="tanggal_pakai" class="form-label">Tanggal Terakhir Pakai</label>
+                                    <label for="tanggal_pakai" class="form-label">Tanggal Terakhir Pakai / Maintenance</label>
                                     <input type="date" class="form-control" id="tanggal_pakai" name="tanggal_pakai" required>
                                 </div>
 
@@ -179,67 +209,91 @@
 
     </div>
 
-    <!-- TOAST NOTIFICATION CONTAINER (Pojok Kanan Bawah) -->
+    <!-- Toast Notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
         <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-                <div class="toast-body" id="toastMessage">
-                    Pesan notifikasi di sini...
-                </div>
+                <div class="toast-body" id="toastMessage">Pesan...</div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Script Utama -->
     <script>
         const SCRIPT_URL = "URL_WEB_APP_ANDA_DISINI";
-        let allDataGlobal = []; // Menyimpan data untuk fitur pencarian
+        let allDataGlobal = [];
 
         window.onload = function() {
             loadDashboardData();
         };
 
-        // Fungsi Toast Notification modern
+        // Logika Dinamis Form berdasarkan Posisi (Upper / Lower)
+        function handlePosisiChange() {
+            const posisi = document.getElementById('posisi').value;
+            const lowerContainer = document.getElementById('lowerOptionsContainer');
+            const tipeBawah = document.getElementById('tipe_bawah');
+            const kodeMotif = document.getElementById('kode_motif');
+
+            if (posisi === 'Lower') {
+                lowerContainer.classList.remove('d-none');
+            } else {
+                lowerContainer.classList.add('d-none');
+                tipeBawah.value = 'Polos';
+                kodeMotif.value = '';
+                document.getElementById('kodeMotifContainer').classList.add('d-none');
+            }
+        }
+
+        // Logika Dinamis Tipe Bawah (Polos / Motif)
+        function handleTipeChange() {
+            const tipe = document.getElementById('tipe_bawah').value;
+            const kodeMotifContainer = document.getElementById('kodeMotifContainer');
+            const kodeMotifInput = document.getElementById('kode_motif');
+
+            if (tipe === 'Motif') {
+                kodeMotifContainer.classList.remove('d-none');
+                kodeMotifInput.required = true;
+            } else {
+                kodeMotifContainer.classList.add('d-none');
+                kodeMotifInput.required = false;
+                kodeMotifInput.value = '';
+            }
+        }
+
         function showToast(message, type = 'success') {
             const toastEl = document.getElementById('liveToast');
             const toastMsg = document.getElementById('toastMessage');
-            
             toastMsg.innerText = message;
             toastEl.className = `toast align-items-center text-white border-0 bg-${type}`;
-            
-            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
-            toast.show();
+            new bootstrap.Toast(toastEl, { delay: 3000 }).show();
         }
 
-        // Ambil data dari Google Sheets
         function loadDashboardData() {
             const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data...</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="10" class="text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Memuat data...</td></tr>`;
 
             fetch(SCRIPT_URL)
                 .then(response => response.json())
                 .then(data => {
-                    allDataGlobal = data; // Simpan data mentah
+                    allDataGlobal = data;
                     renderTable(allDataGlobal);
                     updateCounters(allDataGlobal);
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-danger">Gagal memuat data. Periksa kembali URL Web App Anda.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="10" class="text-center py-4 text-danger">Gagal memuat data. Periksa URL Web App.</td></tr>`;
                 });
         }
 
-        // Render tabel berdasarkan data
         function renderTable(data) {
             const tableBody = document.getElementById('table-body');
             let html = '';
 
             if (data.length === 0) {
-                html = `<tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada data punch yang ditemukan.</td></tr>`;
+                html = `<tr><td colspan="10" class="text-center py-4 text-muted">Belum ada data punch tersimpan.</td></tr>`;
             } else {
                 data.forEach((item, index) => {
                     let cond = item.kondisi ? item.kondisi.trim().toLowerCase() : '';
@@ -250,12 +304,18 @@
 
                     let tglPakai = item.tanggalPakai ? item.tanggalPakai.split('T')[0] : '-';
                     let formattedCounter = !isNaN(item.counterPunch) ? Number(item.counterPunch).toLocaleString() : item.counterPunch;
+                    
+                    // Tampilkan detail tipe/motif
+                    let detailTipe = item.posisi === 'Lower' ? `${item.tipeBawah || 'Polos'}${item.kodeMotif ? ' (' + item.kodeMotif + ')' : ''}` : 'Upper (Polos)';
 
                     html += `
                         <tr>
                             <td>${index + 1}</td>
+                            <td>${item.mesin || '-'}</td>
+                            <td>${item.kodePunch || '-'}</td>
+                            <td>${item.posisi || '-'}</td>
+                            <td>${detailTipe}</td>
                             <td>${item.size}</td>
-                            <td>${item.motifPolos}</td>
                             <td><span class="badge ${badgeClass}">${item.kondisi}</span></td>
                             <td>${formattedCounter}</td>
                             <td>${tglPakai}</td>
@@ -270,7 +330,6 @@
             tableBody.innerHTML = html;
         }
 
-        // Hitung statistik kartu dashboard
         function updateCounters(data) {
             let total = data.length;
             let ready = 0, repair = 0, rusak = 0;
@@ -288,22 +347,19 @@
             document.getElementById('val-rusak').innerText = rusak;
         }
 
-        // Fitur Search Bar Real-time
         function filterTable() {
             let keyword = document.getElementById('searchInput').value.toLowerCase();
             let filteredData = allDataGlobal.filter(item => {
-                let size = String(item.size).toLowerCase();
-                let motif = String(item.motifPolos).toLowerCase();
-                let kondisi = String(item.kondisi).toLowerCase();
-                return size.includes(keyword) || motif.includes(keyword) || kondisi.includes(keyword);
+                let mesin = String(item.mesin || '').toLowerCase();
+                let kode = String(item.kodePunch || '').toLowerCase();
+                let size = String(item.size || '').toLowerCase();
+                return mesin.includes(keyword) || kode.includes(keyword) || size.includes(keyword);
             });
             renderTable(filteredData);
         }
 
-        // Kirim data baru via AJAX
         function submitData(event) {
             event.preventDefault();
-            
             const btnSimpan = document.getElementById('btnSimpan');
             btnSimpan.disabled = true;
             btnSimpan.innerHTML = "Menyimpan...";
@@ -318,8 +374,9 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
-                    showToast("Data berhasil disimpan ke Google Sheets!", "success");
+                    showToast("Data punch berhasil disimpan!", "success");
                     document.getElementById('formPunch').reset();
+                    handlePosisiChange(); // Reset tampilan kondisional
                     switchPage('dashboard');
                 } else {
                     showToast("Gagal: " + data.message, "danger");
@@ -327,7 +384,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast("Terjadi kesalahan koneksi saat mengirim data.", "danger");
+                showToast("Terjadi kesalahan koneksi.", "danger");
             })
             .finally(() => {
                 btnSimpan.disabled = false;
@@ -335,7 +392,6 @@
             });
         }
 
-        // Navigasi Tab / Halaman
         function switchPage(page) {
             const pageDashboard = document.getElementById('page-dashboard');
             const pageForm = document.getElementById('page-form');
